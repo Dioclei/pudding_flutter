@@ -204,8 +204,18 @@ class SignInScreen extends StatelessWidget {
                   onPressed: () {
                     _handleSignIn()
                       .then((FirebaseUser user) {
-                        print(user);
+                        Firestore.instance.collection('users').document(user.uid).setData({ //this adds/updates the user to the database.
+                          'nickname': user.displayName,
+                          'displayname': user.displayName,
+                          'email': user.email,
+                          'photoUrl': user.photoUrl});
                         Navigator.of(context).pushReplacementNamed('/home');
+                        /** TODO: cannot call scaffold from this context. Need to somehow call the scaffold we create from above navigator function
+                        Scaffold.of(context).showSnackBar(
+                          new SnackBar(
+                              content: new Text("Successfully logged in!")
+                          ),
+                        );*/
                       })
                       .catchError((e) => print(e));
                   },

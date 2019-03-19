@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // AppBar for our Social screen
 AppBar socialAppBar(BuildContext context) {
@@ -26,6 +27,8 @@ AppBar socialAppBar(BuildContext context) {
     ],
   );
 }
+
+
 
 class CustomSearchDelegate extends SearchDelegate {
   @override
@@ -73,11 +76,7 @@ class Social extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: Colors.yellow[100],
                     ),
-                    child: Icon(
-                      Icons.face,
-                      color: Colors.brown[700],
-                      size: 70,
-                    ),
+                    child: ProfilePic(),
                     height: double.infinity,
                   ),
                 ),
@@ -140,5 +139,41 @@ class Social extends StatelessWidget {
         ),
       ],
     ));
+  }
+}
+
+class ProfilePic extends StatefulWidget {
+  const ProfilePic({Key key,}) : super (key: key);
+
+  @override
+  _ProfilePicState createState() {
+    return _ProfilePicState();
+  }
+}
+
+class _ProfilePicState extends State<ProfilePic> {
+
+  Image image = Image(
+      image: AssetImage("icons/default_pudding")
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return image;
+  }
+
+  void _loadImage() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    String url = await user.photoUrl;
+    setState(() {
+      image = Image(image: NetworkImage(url),);
+      print("setting image $url");
+    });
   }
 }
