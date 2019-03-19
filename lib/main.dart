@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     AppBar(title: Text("Timetable"),),
     AppBar(title: Text("Multifunction"),),
     AppBar(title: Text("Goals"),),
-    AppBar(title: Text("Social"),),
+    socialAppBar(),
   ];
 
   @override
