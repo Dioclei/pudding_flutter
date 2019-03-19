@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // AppBar for our Social screen
-AppBar socialAppBar() {
+AppBar socialAppBar(BuildContext context) {
   return AppBar(
     title: Text("Social"),
     actions: <Widget>[
       IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
-            //TODO: Search friend function
+            showSearch(
+              context: context,
+              delegate: CustomSearchDelegate(),
+            );
             print("Searching friend!");
           }
       ),
@@ -22,6 +26,33 @@ AppBar socialAppBar() {
     ],
   );
 }
+
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return null;
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return null;
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return null;
+  }
+}
+
 
 class Social extends StatelessWidget {
 
@@ -100,7 +131,9 @@ class Social extends StatelessWidget {
           child: Center(
             child: GestureDetector(
               child: Text("No meetups yet. Schedule one?"),
-              onTap: () => print("Scheduling meetup!"), //TODO: Meetup scheduler
+              onTap: () {
+                print("Scheduling meetup!");
+                }, //TODO: Meetup scheduler
             ),
           ),
           flex: 4,

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "236856435968",
+    "firebase_url": "https://flutter-pudding.firebaseio.com",
+    "project_id": "flutter-pudding",
+    "storage_bucket": "flutter-pudding.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236856435968:android:9521edf154e8ffdd",
+        "android_client_info": {
+          "package_name": "e.pudding_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236856435968-06m3lgljr7vmatjh24hv4vdsgblv9c0k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e.pudding_flutter",
+            "certificate_hash": "33baa4f308244641e035a3af5110aa6e71417c0f"
+          }
+        },
+        {
+          "client_id": "236856435968-rvic0dl56ptedr5gq12uv0hhgme0a2f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2mDBnajZ-sCoE1eVQPD9A2yy2XBZ5ALI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236856435968-rvic0dl56ptedr5gq12uv0hhgme0a2f2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

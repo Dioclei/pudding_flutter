@@ -3,6 +3,11 @@ import 'package:pudding_flutter/calendar_carousel.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:pudding_flutter/social.dart';
+import 'package:pudding_flutter/auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 const signedIn = false;
 void main() {
@@ -52,45 +57,103 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     ),
-    Text('Index 2: Multifunction'),
     Text('Index 3: Goals'),
     Social(),
   ];
 
-  final _appBarOptions = [
-    AppBar(title: Text("Dashboard"),),
-    AppBar(title: Text("Timetable"),),
-    AppBar(title: Text("Multifunction"),),
-    AppBar(title: Text("Goals"),),
-    socialAppBar(),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
+
+    final _appBarOptions = [
+      AppBar(title: Text("Dashboard"),),
+      AppBar(title: Text("Timetable"),),
+      AppBar(title: Text("Goals"),),
+      socialAppBar(context),
+    ];
+
     return Scaffold(
       appBar: _appBarOptions.elementAt(_selectedIndex),
+      floatingActionButton: changingFAB,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.brown[600],), title: Text("Dashboard", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(icon: Icon(Icons.table_chart, color: Colors.brown[600],), title: Text("Timetable", style: TextStyle(color: Colors.brown[600]),)),
-          BottomNavigationBarItem(icon: Icon(Icons.add, color: Colors.brown[600],), title: Text("Multi", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(icon: Icon(Icons.flag, color: Colors.brown[600],), title: Text("Goals", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(icon: Icon(Icons.people, color: Colors.brown[600],), title: Text("Social", style: TextStyle(color: Colors.brown[600]),)),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
     );
   }
 
+  FloatingActionButton changingFAB;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      switch (index) {
+        case 0:
+          changingFAB = null;
+          break;
+        case 1:
+          changingFAB = FloatingActionButton(
+            child: Icon(Icons.add_comment),
+            elevation: 2.0,
+            onPressed: () {
+              print("Timetable Action Button pressed!");
+            },
+          );
+          break;
+        case 2:
+          changingFAB = FloatingActionButton(
+            child: Icon(Icons.library_add),
+            elevation: 2.0,
+            onPressed: () {
+              print("Goals Action Button pressed!");
+            },
+          );
+          break;
+        case 3:
+          changingFAB = FloatingActionButton(
+            child: Icon(Icons.person_add),
+            elevation: 2.0,
+            onPressed: () {
+              print("Social Action Button pressed!");
+            },
+          );
+          break;
+        default:
+          throw Exception("Invalid index $index!!");
+          break;
+      }
     });
   }
+}
+
+
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
+Future<FirebaseUser> _handleSignIn() async {
+  final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+
+  final FirebaseUser user = await _auth.signInWithCredential(credential);
+  print("signed in " + user.displayName);
+  return user;
 }
 
 class SignInRoute extends StatelessWidget {
@@ -139,9 +202,12 @@ class SignInScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: GoogleSignInButton(
                   onPressed: () {
-                    print("Sign in button pressed");
-                    // TODO: Set up Firebase and route after successful login
-                    Navigator.of(context).pushReplacementNamed('/home');
+                    _handleSignIn()
+                      .then((FirebaseUser user) {
+                        print(user);
+                        Navigator.of(context).pushReplacementNamed('/home');
+                      })
+                      .catchError((e) => print(e));
                   },
                 ),
               )
