@@ -74,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: _appBarOptions.elementAt(_selectedIndex),
-      floatingActionButton: changingFAB,
+      floatingActionButton: (_selectedIndex != 0)
+        ? _changingFAB.elementAt(_selectedIndex - 1) // -1 because at _selectedIndex = 1 (timetable), FAB is index 0.
+        : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -93,46 +95,33 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  FloatingActionButton changingFAB;
+  final _changingFAB = <FloatingActionButton>[
+    FloatingActionButton(
+      child: Icon(Icons.add_comment),
+      elevation: 2.0,
+      onPressed: () {
+        print("Timetable Action Button pressed!");
+      },
+    ),
+    FloatingActionButton(
+      child: Icon(Icons.library_add),
+      elevation: 2.0,
+      onPressed: () {
+        print("Goals Action Button pressed!");
+      },
+    ),
+    FloatingActionButton(
+      child: Icon(Icons.person_add),
+      elevation: 2.0,
+      onPressed: () {
+        print("Social Action Button pressed!");
+      },
+    ),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      switch (index) {
-        case 0:
-          changingFAB = null;
-          break;
-        case 1:
-          changingFAB = FloatingActionButton(
-            child: Icon(Icons.add_comment),
-            elevation: 2.0,
-            onPressed: () {
-              print("Timetable Action Button pressed!");
-            },
-          );
-          break;
-        case 2:
-          changingFAB = FloatingActionButton(
-            child: Icon(Icons.library_add),
-            elevation: 2.0,
-            onPressed: () {
-              print("Goals Action Button pressed!");
-            },
-          );
-          break;
-        case 3:
-          changingFAB = FloatingActionButton(
-            child: Icon(Icons.person_add),
-            elevation: 2.0,
-            onPressed: () {
-              print("Social Action Button pressed!");
-            },
-          );
-          break;
-        default:
-          throw Exception("Invalid index $index!!");
-          break;
-      }
     });
   }
 }
