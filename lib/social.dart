@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pudding_flutter/auth.dart';
 
 // AppBar for our Social screen
 AppBar socialAppBar(BuildContext context) {
@@ -17,18 +16,24 @@ AppBar socialAppBar(BuildContext context) {
             print("Searching friend!");
           }
       ),
-      IconButton(
-        icon: Icon(Icons.add),
-        onPressed: () {
-          //TODO: Add friend function
-          print("Adding friend!");
+      PopupMenuButton(
+        onSelected: (value) {
+          switch (value) {
+            case 0: switchAccounts();
+            break;
+            default: throw(Exception("invalid value!"));
+          }
         },
+        itemBuilder: (context) => <PopupMenuEntry>[
+          const PopupMenuItem(
+            value: 0,
+            child: Text('Switch accounts'),
+          )
+        ]
       ),
     ],
   );
 }
-
-
 
 class CustomSearchDelegate extends SearchDelegate {
   @override
@@ -58,7 +63,6 @@ class CustomSearchDelegate extends SearchDelegate {
 
 
 class Social extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +80,14 @@ class Social extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: Colors.yellow[100],
                     ),
-                    child: ProfilePic(),
+                    child: StreamBuilder(
+                      stream: auth.onAuthStateChanged,
+                      builder: (context, snapshot) {
+                        return (snapshot.hasData)
+                          ? Image(image: NetworkImage(snapshot.data.photoUrl),)
+                          : Image(image: AssetImage("icons/default_pudding.png"),);
+                      }
+                    ),
                     height: double.infinity,
                   ),
                 ),
@@ -139,41 +150,5 @@ class Social extends StatelessWidget {
         ),
       ],
     ));
-  }
-}
-
-class ProfilePic extends StatefulWidget {
-  const ProfilePic({Key key,}) : super (key: key);
-
-  @override
-  _ProfilePicState createState() {
-    return _ProfilePicState();
-  }
-}
-
-class _ProfilePicState extends State<ProfilePic> {
-
-  Image image = Image(
-      image: AssetImage("icons/default_pudding")
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    _loadImage();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return image;
-  }
-
-  void _loadImage() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String url = await user.photoUrl;
-    setState(() {
-      image = Image(image: NetworkImage(url),);
-      print("setting image $url");
-    });
   }
 }

@@ -9,9 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-const signedIn = false;
 void main() {
-  runApp(signedIn ? MyApp() : SignInRoute()); //checks if signed in. TODO: run a sign in check with Firebase
+  runApp(checkIfSignedIn() ? MyApp() : SignInRoute()); //checks if signed in.
 }
 
 final ThemeData _themeData = ThemeData(
@@ -139,23 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 
-final GoogleSignIn _googleSignIn = GoogleSignIn();
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
-Future<FirebaseUser> _handleSignIn() async {
-  final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  final FirebaseUser user = await _auth.signInWithCredential(credential);
-  print("signed in " + user.displayName);
-  return user;
-}
-
 class SignInRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -202,7 +184,7 @@ class SignInScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: GoogleSignInButton(
                   onPressed: () {
-                    _handleSignIn()
+                    handleSignIn()
                       .then((FirebaseUser user) {
                         Firestore.instance.collection('users').document(user.uid).setData({ //this adds/updates the user to the database.
                           'nickname': user.displayName,
