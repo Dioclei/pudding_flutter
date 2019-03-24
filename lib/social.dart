@@ -1,30 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:pudding_flutter/auth.dart';
 
 // AppBar for our Social screen
-AppBar socialAppBar() {
+AppBar socialAppBar(BuildContext context) {
   return AppBar(
     title: Text("Social"),
     actions: <Widget>[
       IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
-            //TODO: Search friend function
+            showSearch(
+              context: context,
+              delegate: CustomSearchDelegate(),
+            );
             print("Searching friend!");
           }
       ),
-      IconButton(
-        icon: Icon(Icons.add),
-        onPressed: () {
-          //TODO: Add friend function
-          print("Adding friend!");
+      PopupMenuButton(
+        onSelected: (value) {
+          switch (value) {
+            case 0: switchAccounts();
+            break;
+            default: throw(Exception("invalid value!"));
+          }
         },
+        itemBuilder: (context) => <PopupMenuEntry>[
+          const PopupMenuItem(
+            value: 0,
+            child: Text('Switch accounts'),
+          )
+        ]
       ),
     ],
   );
 }
 
-class Social extends StatelessWidget {
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return null;
+  }
 
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return null;
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return null;
+  }
+}
+
+
+class Social extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,10 +80,13 @@ class Social extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: Colors.yellow[100],
                     ),
-                    child: Icon(
-                      Icons.face,
-                      color: Colors.brown[700],
-                      size: 70,
+                    child: StreamBuilder(
+                      stream: auth.onAuthStateChanged,
+                      builder: (context, snapshot) {
+                        return (snapshot.hasData)
+                          ? Image(image: NetworkImage(snapshot.data.photoUrl),)
+                          : Image(image: AssetImage("icons/default_pudding.png"),);
+                      }
                     ),
                     height: double.infinity,
                   ),
@@ -100,7 +141,9 @@ class Social extends StatelessWidget {
           child: Center(
             child: GestureDetector(
               child: Text("No meetups yet. Schedule one?"),
-              onTap: () => print("Scheduling meetup!"), //TODO: Meetup scheduler
+              onTap: () {
+                print("Scheduling meetup!");
+                }, //TODO: Meetup scheduler
             ),
           ),
           flex: 4,

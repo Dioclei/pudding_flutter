@@ -3,10 +3,14 @@ import 'package:pudding_flutter/calendar_carousel.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:pudding_flutter/social.dart';
+import 'package:pudding_flutter/auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-const signedIn = false;
+
 void main() {
-  runApp(signedIn ? MyApp() : SignInRoute()); //checks if signed in. TODO: run a sign in check with Firebase
+  runApp(checkIfSignedIn() ? MyApp() : SignInRoute()); //checks if signed in.
 }
 
 final ThemeData _themeData = ThemeData(
@@ -52,39 +56,68 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     ),
-    Text('Index 2: Multifunction'),
     Text('Index 3: Goals'),
     Social(),
   ];
 
-  final _appBarOptions = [
-    AppBar(title: Text("Dashboard"),),
-    AppBar(title: Text("Timetable"),),
-    AppBar(title: Text("Multifunction"),),
-    AppBar(title: Text("Goals"),),
-    socialAppBar(),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
+
+    final _appBarOptions = [
+      AppBar(title: Text("Dashboard"),),
+      AppBar(title: Text("Timetable"),),
+      AppBar(title: Text("Goals"),),
+      socialAppBar(context),
+    ];
+
     return Scaffold(
       appBar: _appBarOptions.elementAt(_selectedIndex),
+      floatingActionButton: (_selectedIndex != 0)
+        ? _changingFAB.elementAt(_selectedIndex - 1) // -1 because at _selectedIndex = 1 (timetable), FAB is index 0.
+        : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.brown[600],), title: Text("Dashboard", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(icon: Icon(Icons.table_chart, color: Colors.brown[600],), title: Text("Timetable", style: TextStyle(color: Colors.brown[600]),)),
-          BottomNavigationBarItem(icon: Icon(Icons.add, color: Colors.brown[600],), title: Text("Multi", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(icon: Icon(Icons.flag, color: Colors.brown[600],), title: Text("Goals", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(icon: Icon(Icons.people, color: Colors.brown[600],), title: Text("Social", style: TextStyle(color: Colors.brown[600]),)),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
     );
   }
+
+  final _changingFAB = <FloatingActionButton>[
+    FloatingActionButton(
+      child: Icon(Icons.add_comment),
+      elevation: 2.0,
+      onPressed: () {
+        print("Timetable Action Button pressed!");
+      },
+    ),
+    FloatingActionButton(
+      child: Icon(Icons.library_add),
+      elevation: 2.0,
+      onPressed: () {
+        print("Goals Action Button pressed!");
+      },
+    ),
+    FloatingActionButton(
+      child: Icon(Icons.person_add),
+      elevation: 2.0,
+      onPressed: () {
+        print("Social Action Button pressed!");
+      },
+    ),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -92,6 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 }
+
 
 class SignInRoute extends StatelessWidget {
   @override
@@ -139,9 +173,22 @@ class SignInScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: GoogleSignInButton(
                   onPressed: () {
-                    print("Sign in button pressed");
-                    // TODO: Set up Firebase and route after successful login
-                    Navigator.of(context).pushReplacementNamed('/home');
+                    handleSignIn()
+                      .then((FirebaseUser user) {
+                        Firestore.instance.collection('users').document(user.uid).setData({ //this adds/updates the user to the database.
+                          'nickname': user.displayName,
+                          'displayname': user.displayName,
+                          'email': user.email,
+                          'photoUrl': user.photoUrl});
+                        Navigator.of(context).pushReplacementNamed('/home');
+                        /** TODO: cannot call scaffold from this context. Need to somehow call the scaffold we create from above navigator function
+                        Scaffold.of(context).showSnackBar(
+                          new SnackBar(
+                              content: new Text("Successfully logged in!")
+                          ),
+                        );*/
+                      })
+                      .catchError((e) => print(e));
                   },
                 ),
               )
