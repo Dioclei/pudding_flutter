@@ -1,5 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth auth = FirebaseAuth.instance;
@@ -16,6 +17,14 @@ Future<FirebaseUser> handleSignIn() async {
 
   user = await auth.signInWithCredential(credential);
   print("signed in " + user.displayName);
+
+  //updates information in firestore
+  Firestore.instance.collection('users').document(user.uid).setData({ //this adds/updates the user to the database.
+    'displayname': user.displayName,
+    'nickname': user.displayName,
+    'email': user.email,
+    'photoUrl': user.photoUrl});
+
   return user;
 }
 
