@@ -19,14 +19,23 @@ Future<FirebaseUser> handleSignIn() async {
   print("signed in " + user.displayName);
 
   //updates information in firestore
-  Firestore.instance.collection('users').document(user.uid).setData({ //this adds/updates the user to the database.
-    'displayname': user.displayName,
-    'nickname': user.displayName,
+  Firestore.instance.collection('users').document(user.uid).updateData({ //this adds/updates the user to the database.
+    'displayName': user.displayName,
     'email': user.email,
     'photoUrl': user.photoUrl});
-
+  Firestore.instance.collection('users').document(user.uid).get().then((document) { //setting defaults.
+    if (!document.data.containsKey('nickname')) {
+      Firestore.instance.collection('users').document(user.uid).updateData({'nickname': user.displayName});
+    }
+    if (!document.data.containsKey('bio')) {
+      Firestore.instance.collection('users').document(user.uid).updateData({'bio': 'No bio set.'});
+    }
+    print(document.documentID);
+  });
   return user;
 }
+
+
 
 void handleSignOut() {
   _googleSignIn.signOut();
