@@ -57,29 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Social(),
   ];
 
-  final _changingFAB = <FloatingActionButton>[
-    FloatingActionButton(
-      child: Icon(Icons.add_comment),
-      elevation: 2.0,
-      onPressed: () {
-        print("Timetable Action Button pressed!");
-      },
-    ),
-    FloatingActionButton(
-      child: Icon(Icons.library_add),
-      elevation: 2.0,
-      onPressed: () {
-        print("Goals Action Button pressed!");
-      },
-    ),
-    FloatingActionButton(
-      child: Icon(Icons.person_add),
-      elevation: 2.0,
-      onPressed: () {
-        print("Social Action Button pressed!");
-      },
-    ),
-  ];
+
 
 
   @override
@@ -89,6 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
       timetableAppBar(context),
       goalsAppBar(context),
       socialAppBar(context),
+    ];
+
+    final _changingFAB = <FloatingActionButton>[
+      timetableFloatingActionButton(context),
+      goalsFloatingActionButton(context),
+      socialFloatingActionButton(context),
     ];
 
     return Scaffold(
