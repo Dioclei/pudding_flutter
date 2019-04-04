@@ -7,6 +7,16 @@ AppBar timetableAppBar(BuildContext context) {
   );
 }
 
+FloatingActionButton timetableFloatingActionButton(BuildContext context) {
+  return FloatingActionButton(
+    child: Icon(Icons.add_comment),
+    elevation: 2.0,
+    onPressed: () {
+      print("Timetable Action Button pressed!");
+    },
+  );
+}
+
 class Timetable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

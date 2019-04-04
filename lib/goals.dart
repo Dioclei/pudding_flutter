@@ -7,6 +7,16 @@ AppBar goalsAppBar(BuildContext context) {
   );
 }
 
+FloatingActionButton goalsFloatingActionButton(BuildContext context) {
+  return FloatingActionButton(
+    child: Icon(Icons.library_add),
+    elevation: 2.0,
+    onPressed: () {
+      print("Goals Action Button pressed!");
+    },
+  );
+}
+
 class Goals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
