@@ -440,6 +440,12 @@ class CircleImage extends StatelessWidget {
   }
 }
 
+class Friend {
+  final String photoUrl;
+  final String nickname;
+  Friend({@required this.photoUrl, @required this.nickname});
+}
+
 void showFriendList(BuildContext context) {
   showModalBottomSheet(context: context, builder: (context) {
     return Container(
@@ -471,39 +477,14 @@ void showFriendList(BuildContext context) {
             ),
             Expanded(
               child: StreamBuilder(
-                stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 100.0,
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
-                        ),
-                        // itemCount: snapshot.data['friends'].length,
-                        itemBuilder: (context, n) {
-                          final friendId = snapshot.data['friends'][n];
-                          return StreamBuilder(
-                            stream: Firestore.instance.collection('users').document(friendId).snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final photoUrl = snapshot.data['photoUrl'];
-                                final nickname = snapshot.data['nickname'];
-                                return FriendCard( //TODO: Sort this list! Alphabetically.
-                                  photoUrl: photoUrl,
-                                  nickname: nickname,
-                                );
-                              } else return Container(
-                                color: Colors.transparent,
-                              );
-                            }
-                          );
-                        }
-                    );
-                  } else return Center(
+                  stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return FriendGridList(snapshot: snapshot,);
+                    } else return Center(
                     child: CircularProgressIndicator(),
-                  );
-                }
+                    );
+                  }
               ),
             ),
           ],
@@ -511,6 +492,60 @@ void showFriendList(BuildContext context) {
       ),
     );
   });
+}
+
+class FriendGridList extends StatefulWidget {
+
+  final AsyncSnapshot snapshot;
+
+  const FriendGridList({Key key, @required this.snapshot}) : super(key: key);
+
+  @override
+  _FriendGridListState createState() => _FriendGridListState();
+}
+
+class _FriendGridListState extends State<FriendGridList> {
+
+  String friendId;
+  List<Friend> friends = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i=0; i<widget.snapshot.data['friends'].length; i++) {
+      friendId = widget.snapshot.data['friends'][i];
+      Firestore.instance.collection('users').document(friendId).get().then((document) {
+        String nickname = document.data['nickname'];
+        String photoUrl = document.data['photoUrl'];
+        Friend friend = new Friend(nickname: nickname, photoUrl: photoUrl);
+        print('nickname: ${friend.nickname}');
+        print('photoUrl: ${friend.photoUrl}');
+        friends.add(friend);
+        setState(() {});
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (friends.length > 1) {
+      friends.sort((a, b) => a.nickname.compareTo(b.nickname));
+      return GridView.builder(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 100.0,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+          ),
+          itemCount: friends.length,
+          itemBuilder: (context, n) {
+            return FriendCard(
+              nickname: friends[n].nickname,
+              photoUrl: friends[n].photoUrl,
+            );
+          }
+      );
+    } else return Center(child: CircularProgressIndicator(),);
+  }
 }
 
 class FriendCard extends StatelessWidget {
@@ -523,10 +558,13 @@ class FriendCard extends StatelessWidget {
     return Column(
       children: <Widget>[
         CircleImage(photoUrl: photoUrl),
-        Text(
-          nickname,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Text(
+            nickname,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
