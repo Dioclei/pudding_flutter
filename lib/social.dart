@@ -538,9 +538,14 @@ class _FriendGridListState extends State<FriendGridList> {
           ),
           itemCount: friends.length,
           itemBuilder: (context, n) {
-            return FriendCard(
-              nickname: friends[n].nickname,
-              photoUrl: friends[n].photoUrl,
+            return Material(
+              child: InkWell(
+                onTap: () => print('Friend ${friends[n].nickname} tapped!'), //TODO: Add friends to meetup
+                child: FriendCard(
+                  nickname: friends[n].nickname,
+                  photoUrl: friends[n].photoUrl,
+                ),
+              ),
             );
           }
       );
