@@ -3,6 +3,19 @@ import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profilepage.dart';
 
+/// SOCIAL
+/// Data Structure
+/// collection('users')
+///   document(user.uid)
+///     displayName: String
+///     email: String
+///     photoUrl: String
+///     nickname: String (default: nickname = displayName)
+///     bio: String (default: 'no bio set.')
+///     friends: List<String> of friend uid(s)
+///     requested: List<String> of uid(s) who have sent a friend request to the user
+///     sentRequests: List<String> of uid(s) whom the user has sent a friend request
+
 // AppBar for our Social screen
 AppBar socialAppBar(BuildContext context) {
   return AppBar(

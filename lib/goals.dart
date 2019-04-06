@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_colorpicker/block_picker.dart';
 import 'auth.dart';
+
+/// GOALS
+/// Data Structure
+/// collection('goals')
+///   document(user.uid)
+///     collection('userGoals')
+///       totalDuration: Duration.toString TODO: implement calculation of totalDuration.
+///       document(goal_id)
+///         name: String
+///         desc: String
+///         timeSpent: Duration.toString
+///         colorValue: Color.value
+///         collection('events') TODO: implement adding events and calculating the duration.
+///           document(event_id)
+///             startTime: Timestamp
+///             endTime: Timestamp
 
 enum Layout {
   list,
