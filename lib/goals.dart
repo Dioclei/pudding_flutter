@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_colorpicker/block_picker.dart';
 import 'auth.dart';
+import 'goalcreationpage.dart';
 
 /// GOALS
 /// Data Structure
@@ -32,9 +32,14 @@ AppBar goalsAppBar(BuildContext context) {
     actions: <Widget>[
       IconButton(
         icon: (currentLayout == Layout.list)
-            ? Icon(Icons.apps,)
-            : Icon(Icons.list,),
-        onPressed: () => print('Change layout'), //TODO: Change layout with stateful widget.
+            ? Icon(
+                Icons.apps,
+              )
+            : Icon(
+                Icons.list,
+              ),
+        onPressed: () =>
+            print('Change layout'), //TODO: Change layout with stateful widget.
       ),
     ],
   );
@@ -45,19 +50,12 @@ FloatingActionButton goalsFloatingActionButton(BuildContext context) {
     child: Icon(Icons.library_add),
     elevation: 2.0,
     onPressed: () {
-      Goal goal = new Goal(
-          name: 'jason',
-          desc: 'hello jason',
-          timeSpent: new Duration(days: 1, hours: 2, minutes: 3, seconds: 4),
-          color: Colors.blue
+      showDialog(
+        context: context,
+        builder: (context) {
+          return GoalCreationPage();
+        },
       );
-      Firestore.instance.collection('goals').document(user.uid).collection('userGoals').add({
-        'name': goal.name,
-        'desc': goal.desc,
-        'timeSpent': goal.timeSpent.toString(),
-        'colorValue': goal.color.value,
-      });
-      print("Add goal!"); //TODO: Implement adding goals & archiving goals
     },
   );
 }
@@ -66,57 +64,71 @@ class Goals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: Firestore.instance.collection('goals').document(user.uid).collection('userGoals').snapshots(),
+        stream: Firestore.instance
+            .collection('goals')
+            .document(user.uid)
+            .collection('userGoals')
+            .snapshots(),
         builder: (context, snapshot) {
           print(Colors.blue.value);
           if (snapshot.hasData) {
             List goalList = [];
-            goalList = snapshot.data.documents.map((doc) => new Goal(
-              name: doc['name'],
-              desc: doc['desc'],
-              color: Color(doc['colorValue']),
-              timeSpent: parseDuration(doc['timeSpent']),
-            )).toList();
+            goalList = snapshot.data.documents
+                .map((doc) => new Goal(
+                      title: doc['title'],
+                      color: Color(doc['colorValue']),
+                      timeSpent: parseDuration(doc['timeSpent']),
+                      selectedPuddingIndex: doc['selectedPuddingIndex'],
+                    ))
+                .toList();
             if (goalList.length != 0) {
               switch (currentLayout) {
                 case Layout.list:
                   return ListView.builder(
                       itemCount: goalList.length,
                       itemBuilder: (context, i) {
-                        return GoalsCard(goal: goalList[i],);
+                        return GoalsCard(
+                          goal: goalList[i],
+                        );
                       }); //TODO: Implement ListView goals
                 case Layout.grid:
                   return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200.0),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200.0),
                       itemBuilder: (context, i) {
-                        return GoalsCard(goal: goalList[i],);
-                      }
-                  ); //TODO: Implement GridView goals
+                        return GoalsCard(
+                          goal: goalList[i],
+                        );
+                      }); //TODO: Implement GridView goals
               }
-            } else return Center(child: Text('No goals. Add new goal?'),);
-          } else return Center(child: CircularProgressIndicator(),);
-
-        }
-    );
+            } else
+              return Center(
+                child: Text('No goals. Add new goal?'),
+              );
+          } else
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+        });
   }
 }
 
 class Goal {
-  String name;
-  String desc;
+  String title;
   Color color;
   Duration timeSpent;
+  int selectedPuddingIndex;
 
-  Goal({
-    @required this.name,
-    this.desc: '',
-    this.timeSpent: const Duration(seconds: 0),
-    this.color: Colors.blue
-  });
+  Goal(
+      {@required this.title,
+      @required this.timeSpent,
+      @required this.color,
+      this.selectedPuddingIndex: 0});
 }
 
 class GoalsCard extends StatelessWidget {
   final Goal goal;
+
   GoalsCard({@required this.goal});
 
   @override
@@ -127,8 +139,8 @@ class GoalsCard extends StatelessWidget {
         color: goal.color,
         child: ListTile(
           leading: Icon(Icons.library_music),
-          title: Text(goal.name),
-          subtitle: Text('${goal.desc}, Time spent: ${goal.timeSpent}'),
+          title: Text(goal.title),
+          subtitle: Text('Time spent: ${goal.timeSpent}, Selected Index: ${goal.selectedPuddingIndex}'),
         ),
       ),
     );
