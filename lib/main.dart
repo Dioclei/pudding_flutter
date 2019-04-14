@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'themecolors.dart';
 import 'auth.dart';
 import 'signinpage.dart';
 import 'social.dart';
@@ -15,11 +16,6 @@ void main() {
       ? runApp(checkIfSignedIn() ? MyApp() : SignInRoute()) //checks if signed in.
       : runApp(MyApp());
 }
-
-final ThemeData themeData = ThemeData(
-  primarySwatch: Colors.brown,
-  canvasColor: Colors.yellow[100],
-);
 
 class MyApp extends StatelessWidget {
 
@@ -72,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: _appBarOptions.elementAt(_selectedIndex),
       floatingActionButton: (_selectedIndex != 0)
           ? _changingFAB.elementAt(_selectedIndex -
@@ -81,18 +78,22 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            backgroundColor: backgroundColor,
               icon: Icon(Icons.home, color: Colors.brown[600],),
               title: Text(
                 "Dashboard", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
+              backgroundColor: backgroundColor,
               icon: Icon(Icons.table_chart, color: Colors.brown[600],),
               title: Text(
                 "Timetable", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
+              backgroundColor: backgroundColor,
               icon: Icon(Icons.flag, color: Colors.brown[600],),
               title: Text(
                 "Goals", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
+              backgroundColor: backgroundColor,
               icon: Icon(Icons.people, color: Colors.brown[600],),
               title: Text(
                 "Social", style: TextStyle(color: Colors.brown[600]),)),

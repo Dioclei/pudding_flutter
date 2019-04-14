@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'themecolors.dart';
 import 'dart:async';
 import 'goals.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -85,144 +86,147 @@ class _GoalPageState extends State<GoalPage> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Let's get going!",
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Container(
-                // TODO: APPEARANCE: Add a pudding indicator of time spent
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.red,
+      body: Container(
+        color: backgroundColor,
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Let's get going!",
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  if (_timer.isActive)
-                    print('timer is active!');
-                  else {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-                            ),
-                            title: Text('Set Duration'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('OK'),
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Container(
+                  // TODO: APPEARANCE: Add a pudding indicator of time spent
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    if (_timer.isActive)
+                      print('timer is active!');
+                    else {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                               ),
-                            ],
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                NumberPicker.integer(
-                                    initialValue: _displayedDuration.inMinutes,
-                                    minValue: 5,
-                                    maxValue: 120,
-                                    onChanged: (num) {
-                                      print(num);
-                                      setState(() {
-                                        _initialDuration = Duration(minutes: num);
-                                        _displayedDuration = _initialDuration;
-                                      });
-                                    }),
-                                Text('minutes', style: TextStyle(fontWeight: FontWeight.bold),),
-                              ],
-                            ),
-                          );
-                        });
-                  }
-                },
-                child: Text(
-                  '${_displayedDuration.inMinutes}:${_displayedDuration.toString().substring(5, 7)}',
-                  style: TextStyle(fontSize: 36.0),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
-                onPressed: () => setState(() {
-                      if (_buttonText == 'Start') {
-                        _buttonText = 'Give up';
-                        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                          // TODO: RESEARCH: Will this still run if the screen is turned off?
-                          setState(() {
-                            if (_displayedDuration > const Duration(seconds: 0))
-                              _displayedDuration = _displayedDuration - Duration(seconds: 1);
-                              // TODO: Callback when timer finishes: Add (timestamp & duration) to database, add to timetable? make a ding sound, etc.
-                            else {
-                              timer.cancel();
-                              _buttonText = 'Start';
-                              _displayedDuration = _initialDuration;
-                            }
-                          });
-                        });
-                      } else if (_buttonText == 'Give up') {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(16.0))),
-                                content: Text(
-                                  'Are you sure you want to give up?',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
+                              title: Text('Set Duration'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('OK'),
                                 ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text('Yes'),
-                                    onPressed: () {
-                                      _timer.cancel();
-                                      _displayedDuration = _initialDuration;
-                                      // TODO: terminate goal. DISCUSS: do we still add timestamp to database?
-                                      setState(() => _buttonText = 'Start');
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text('No'),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
+                              ],
+                              content: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  NumberPicker.integer(
+                                      initialValue: _displayedDuration.inMinutes,
+                                      minValue: 5,
+                                      maxValue: 120,
+                                      onChanged: (num) {
+                                        print(num);
+                                        setState(() {
+                                          _initialDuration = Duration(minutes: num);
+                                          _displayedDuration = _initialDuration;
+                                        });
+                                      }),
+                                  Text('minutes', style: TextStyle(fontWeight: FontWeight.bold),),
                                 ],
-                              );
-                            });
-                      }
-                    }),
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                ),
-                color: widget.goal.color,
-                child: Text(
-                  _buttonText,
-                  style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          });
+                    }
+                  },
+                  child: Text(
+                    '${_displayedDuration.inMinutes}:${_displayedDuration.toString().substring(5, 7)}',
+                    style: TextStyle(fontSize: 36.0),
+                  ),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () => setState(() {
+                        if (_buttonText == 'Start') {
+                          _buttonText = 'Give up';
+                          _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                            // TODO: RESEARCH: Will this still run if the screen is turned off?
+                            setState(() {
+                              if (_displayedDuration > const Duration(seconds: 0))
+                                _displayedDuration = _displayedDuration - Duration(seconds: 1);
+                                // TODO: Callback when timer finishes: Add (timestamp & duration) to database, add to timetable? make a ding sound, etc.
+                              else {
+                                timer.cancel();
+                                _buttonText = 'Start';
+                                _displayedDuration = _initialDuration;
+                              }
+                            });
+                          });
+                        } else if (_buttonText == 'Give up') {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  content: Text(
+                                    'Are you sure you want to give up?',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        _timer.cancel();
+                                        _displayedDuration = _initialDuration;
+                                        // TODO: terminate goal. DISCUSS: do we still add timestamp to database?
+                                        setState(() => _buttonText = 'Start');
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text('No'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
+                      }),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                  ),
+                  color: widget.goal.color,
+                  child: Text(
+                    _buttonText,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

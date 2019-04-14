@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'themecolors.dart';
 import 'main.dart';
 import 'auth.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -27,7 +28,7 @@ class SignInScreen extends StatelessWidget {
     return Scaffold(
       appBar: null,
       body: Container(
-        color: Colors.yellow[100],
+        color: Colors.yellow[50],
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'themecolors.dart';
 import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profilepage.dart';
@@ -97,6 +98,7 @@ class SocialSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return Container(
+      color: backgroundColor,
         child: (query.contains('@') &&
                 query.contains('.')) //check whether it's an email
             ? StreamBuilder(
@@ -154,11 +156,16 @@ class SocialSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text('Search for a person using his name or email!'),
-        Text('Search for an email for greater accuracy..'),
-      ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: backgroundColor,
+      child: Column(
+        children: <Widget>[
+          Text('Search for a person using his name or email!'),
+          Text('Search for an email for greater accuracy..'),
+        ],
+      ),
     );
   }
 }
@@ -170,71 +177,74 @@ class Social extends StatelessWidget {
         stream: auth.onAuthStateChanged,
         builder: (context, userSnapshot) {
           if (userSnapshot.hasData) {
-            return Column(
-              children: <Widget>[
-                StreamBuilder(
-                    stream: Firestore.instance
-                        .collection('users')
-                        .document(userSnapshot.data.uid)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      return (snapshot.hasData)
-                          ? Row(
-                              children: <Widget>[
-                                Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CircleImage(
-                                      photoUrl: snapshot.data['photoUrl'],
-                                      size: 70,
-                                    )),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        snapshot.data['nickname'],
-                                        style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w500,
+            return Container(
+              color: backgroundColor,
+              child: Column(
+                children: <Widget>[
+                  StreamBuilder(
+                      stream: Firestore.instance
+                          .collection('users')
+                          .document(userSnapshot.data.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        return (snapshot.hasData)
+                            ? Row(
+                                children: <Widget>[
+                                  Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CircleImage(
+                                        photoUrl: snapshot.data['photoUrl'],
+                                        size: 70,
+                                      )),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          snapshot.data['nickname'],
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        snapshot.data['bio'],
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                    ],
+                                        Text(
+                                          snapshot.data['bio'],
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          : Container();
-                    }),
-                Divider(),
-                FriendRequests(),
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Meetups",
-                        style: TextStyle(
-                          fontSize: 24.0,
+                                ],
+                              )
+                            : Container();
+                      }),
+                  Divider(),
+                  FriendRequests(),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Meetups",
+                          style: TextStyle(
+                            fontSize: 24.0,
+                          ),
                         ),
-                      ),
-                      Center(
-                        child: GestureDetector(
-                          child: Text("No meetups yet. Schedule one?"),
-                          onTap: () {
-                            print("Scheduling meetup!");
-                          }, //TODO: Meetup scheduler
+                        Center(
+                          child: GestureDetector(
+                            child: Text("No meetups yet. Schedule one?"),
+                            onTap: () {
+                              print("Scheduling meetup!");
+                            }, //TODO: Meetup scheduler
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           } else {
             return Padding(
@@ -469,46 +479,43 @@ class Friend {
 void showFriendList(BuildContext context) {
   showModalBottomSheet(context: context, builder: (context) {
     return Container(
-      color: Colors.grey[600], //TODO: fix this canvasColor later.
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.yellow[50],
-          borderRadius: BorderRadius.only(
-            topRight: const Radius.circular(10.0),
-            topLeft: const Radius.circular(10.0),
-          ),
+      decoration: BoxDecoration(
+        color: Colors.yellow[50],
+        borderRadius: BorderRadius.only(
+          topRight: const Radius.circular(10.0),
+          topLeft: const Radius.circular(10.0),
         ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 20.0,
-              child: Center(
-                child: Container(
-                  width: 40.0,
-                  height: 6.0,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[600],
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(3.0)
-                    ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 20.0,
+            child: Center(
+              child: Container(
+                width: 40.0,
+                height: 6.0,
+                decoration: BoxDecoration(
+                  color: Colors.grey[600],
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(3.0)
                   ),
                 ),
               ),
             ),
-            Expanded(
-              child: StreamBuilder(
-                  stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return FriendGridList(snapshot: snapshot,);
-                    } else return Center(
-                    child: CircularProgressIndicator(),
-                    );
-                  }
-              ),
+          ),
+          Expanded(
+            child: StreamBuilder(
+                stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return FriendGridList(snapshot: snapshot,);
+                  } else return Center(
+                  child: CircularProgressIndicator(),
+                  );
+                }
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   });
