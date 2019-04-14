@@ -102,8 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
     );
   }
 

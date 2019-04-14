@@ -34,6 +34,7 @@ dependencies:
   flutter_auth_buttons: ^0.3.1
   charts_flutter: ^0.6.0
   numberpicker: ^1.0.0
+  flushbar: ^1.4.0
 
 dev_dependencies:
   flutter_test:

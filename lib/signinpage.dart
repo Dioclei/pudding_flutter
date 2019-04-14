@@ -4,6 +4,7 @@ import 'auth.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
 
 
 class SignInRoute extends StatelessWidget {
@@ -55,12 +56,11 @@ class SignInScreen extends StatelessWidget {
                     handleSignIn()
                         .then((FirebaseUser user) {
                       Navigator.of(context).pushReplacementNamed('/home');
-                      /** TODO: cannot call scaffold from this context. Need to somehow call the scaffold we create from above navigator function
-                          Scaffold.of(context).showSnackBar(
-                          new SnackBar(
-                          content: new Text("Successfully logged in!")
-                          ),
-                          );*/
+                      Flushbar(
+                        message: 'Successfully logged in!',
+                        duration: Duration(seconds: 3),
+                        icon: Icon(Icons.check, color: Colors.white,),
+                      )..show(context);
                     })
                         .catchError((e) => print(e));
                   },

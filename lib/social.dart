@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profilepage.dart';
+import 'package:flushbar/flushbar.dart';
 
 /// SOCIAL
 /// Data Structure
@@ -34,7 +35,13 @@ AppBar socialAppBar(BuildContext context) {
           onSelected: (value) {
             switch (value) {
               case 0:
-                switchAccounts();
+                switchAccounts().then((user) {
+                  Flushbar(
+                    message: 'Successfully switched accounts as ${user.displayName}!',
+                    icon: Icon(Icons.check, color: Colors.white,),
+                    duration: Duration(seconds: 3),
+                  ).show(context);
+                });
                 break;
               default:
                 throw (Exception("invalid value!"));
