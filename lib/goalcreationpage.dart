@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flushbar/flushbar.dart';
 import 'auth.dart';
 import 'goals.dart';
 
@@ -207,6 +207,11 @@ class _GoalCreationPageState extends State<GoalCreationPage> {
               'selectedPuddingIndex': goal.selectedPuddingIndex,
             });
             Navigator.pop(context);
+            Flushbar(
+              message: 'Goal created!',
+              icon: Icon(Icons.check, color: Colors.white,),
+              duration: Duration(seconds: 3),
+            ).show(context);
           },
           child: Text('OK'),
         ),
