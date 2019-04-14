@@ -35,8 +35,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key})
       : super(key: key);
@@ -60,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    showInSnackBar('Successfully logged in!');
     final _appBarOptions = [
       dashboardAppBar(context),
       timetableAppBar(context),
@@ -75,7 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: _appBarOptions.elementAt(_selectedIndex),
       floatingActionButton: (_selectedIndex != 0)
           ? _changingFAB.elementAt(_selectedIndex -
@@ -106,8 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
     );
   }
 
@@ -115,11 +111,5 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  void showInSnackBar(String value) {
-    Scaffold.of(context).showSnackBar(new SnackBar(
-        content: new Text(value)
-    ));
   }
 }

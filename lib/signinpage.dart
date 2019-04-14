@@ -5,13 +5,14 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
 class SignInRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Sign In",
       theme: themeData,
-      routes: <String, WidgetBuilder>{
+      routes: <String, WidgetBuilder> {
         '/home': (context) => MyApp(),
       },
       home: new SignInScreen(),
@@ -51,14 +52,17 @@ class SignInScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: GoogleSignInButton(
                   onPressed: () {
-                    handleSignIn().then((FirebaseUser user) {
+                    handleSignIn()
+                        .then((FirebaseUser user) {
                       Navigator.of(context).pushReplacementNamed('/home');
-                    }).catchError((e) {
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text('Unsuccessful login. Please try again.'))
-                      );
-                      print(e);
-                    });
+                      /** TODO: cannot call scaffold from this context. Need to somehow call the scaffold we create from above navigator function
+                          Scaffold.of(context).showSnackBar(
+                          new SnackBar(
+                          content: new Text("Successfully logged in!")
+                          ),
+                          );*/
+                    })
+                        .catchError((e) => print(e));
                   },
                 ),
               )
