@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth.dart';
 import 'goalcreationpage.dart';
-import 'goalpage.dart';
 
 /// GOALS
 /// Data Structure
@@ -42,10 +41,6 @@ AppBar goalsAppBar(BuildContext context) {
         onPressed: () =>
             print('Change layout'), //TODO: Change layout with stateful widget.
       ),
-      IconButton(
-        icon: Icon(Icons.settings),
-        onPressed: () => print('Open settings'), //TODO: Goals settings: like whether to lock up the screen etc.? or shld we just lock the screen anyway
-      )
     ],
   );
 }
@@ -75,6 +70,7 @@ class Goals extends StatelessWidget {
             .collection('userGoals')
             .snapshots(),
         builder: (context, snapshot) {
+          print(Colors.blue.value);
           if (snapshot.hasData) {
             List goalList = [];
             goalList = snapshot.data.documents
@@ -137,17 +133,14 @@ class GoalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.push(context, new MaterialPageRoute(builder: (context) => GoalPage(goal: goal))),
-      child: Card(
-        child: Container(
-          height: 100.0,
-          color: goal.color,
-          child: ListTile(
-            leading: Icon(Icons.library_music),
-            title: Text(goal.title),
-            subtitle: Text('Time spent: ${goal.timeSpent}, Selected Index: ${goal.selectedPuddingIndex}'),
-          ),
+    return Card(
+      child: Container(
+        height: 100.0,
+        color: goal.color,
+        child: ListTile(
+          leading: Icon(Icons.library_music),
+          title: Text(goal.title),
+          subtitle: Text('Time spent: ${goal.timeSpent}, Selected Index: ${goal.selectedPuddingIndex}'),
         ),
       ),
     );

@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'auth.dart';
 import 'goals.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'auth.dart';
 
 class GoalCreationPage extends StatefulWidget {
   @override
