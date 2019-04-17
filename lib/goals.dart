@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth.dart';
 import 'goalcreationpage.dart';
 import 'goalpage.dart';
+import 'package:flushbar/flushbar.dart';
 
 /// GOALS
 /// Data Structure
@@ -65,7 +66,12 @@ FloatingActionButton goalsFloatingActionButton(BuildContext context) {
   );
 }
 
-class Goals extends StatelessWidget {
+class Goals extends StatefulWidget {
+  @override
+  _GoalsState createState() => _GoalsState();
+}
+
+class _GoalsState extends State<Goals> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -78,12 +84,15 @@ class Goals extends StatelessWidget {
           if (snapshot.hasData) {
             List goalList = [];
             goalList = snapshot.data.documents
-                .map((doc) => new Goal(
+                .map((doc) {
+                  return new Goal(
+                      id: doc.documentID,
                       title: doc['title'],
                       color: Color(doc['colorValue']),
                       timeSpent: parseDuration(doc['timeSpent']),
                       selectedPuddingIndex: doc['selectedPuddingIndex'],
-                    ))
+                    );
+                })
                 .toList();
             if (goalList.length != 0) {
               switch (currentLayout) {
@@ -91,8 +100,28 @@ class Goals extends StatelessWidget {
                   return ListView.builder(
                       itemCount: goalList.length,
                       itemBuilder: (context, i) {
-                        return GoalsCard(
-                          goal: goalList[i],
+                        return Dismissible(
+                          key: Key(goalList[i].toString()),
+                          child: GoalsCard(
+                            goal: goalList[i],
+                          ),
+                          direction: DismissDirection.endToStart,
+                          background:  Container(
+                            alignment: AlignmentDirectional.centerEnd,
+                            color: Colors.green,
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                              child: Icon(Icons.archive,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          onDismissed: (direction) {
+                            setState(() {
+                            goalList.removeAt(i);
+                          });
+                            archiveGoal(goalList[i], context);
+                          },
                         );
                       }); //TODO: Implement ListView goals
                 case Layout.grid:
@@ -118,13 +147,14 @@ class Goals extends StatelessWidget {
 }
 
 class Goal {
+  String id;
   String title;
   Color color;
   Duration timeSpent;
   int selectedPuddingIndex;
 
   Goal(
-      {@required this.title,
+      {this.id, @required this.title,
       @required this.timeSpent,
       @required this.color,
       this.selectedPuddingIndex: 0});
@@ -167,4 +197,12 @@ Duration parseDuration(String s) {
   }
   micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
+}
+
+void archiveGoal(Goal goal, BuildContext context) {
+  Flushbar(
+    icon: Icon(Icons.archive),
+    message: 'Goal archived!',
+  ).show(context);
+  
 }

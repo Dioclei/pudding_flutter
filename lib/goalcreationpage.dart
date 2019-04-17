@@ -205,6 +205,8 @@ class _GoalCreationPageState extends State<GoalCreationPage> {
               'colorValue': goal.color.value,
               'timeSpent': goal.timeSpent.toString(),
               'selectedPuddingIndex': goal.selectedPuddingIndex,
+            }).then((doc) {
+              goal.id = doc.documentID;
             });
             Navigator.pop(context);
             Flushbar(

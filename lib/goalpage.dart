@@ -3,6 +3,8 @@ import 'themecolors.dart';
 import 'dart:async';
 import 'goals.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'auth.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.
 /// TODO OVERALL:
@@ -83,7 +85,31 @@ class _GoalPageState extends State<GoalPage> {
                     builder: (context) => GoalStatPage(
                           goal: widget.goal,
                         ))),
+          ),
+          IconButton(
+            icon: Icon(Icons.archive),
+            onPressed: () => showDialog(
+                context: context,
+              builder: (context) {
+                  return AlertDialog(
+                    content: Center(child:
+                    Text('Are you sure you want to delete this goal?')
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(widget.goal.id).delete();
+                          Navigator.pop(context);
+                          exit();
+                        },
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  );
+              }
+            )
           )
+
         ],
       ),
       body: Container(
