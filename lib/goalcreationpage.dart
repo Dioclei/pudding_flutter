@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
-import 'auth.dart';
 import 'goals.dart';
 
 class GoalCreationPage extends StatefulWidget {
@@ -196,24 +194,14 @@ class _GoalCreationPageState extends State<GoalCreationPage> {
               timeSpent: Duration(days: 0),
               selectedPuddingIndex: selectedPuddingIndex,
             );
-            Firestore.instance
-                .collection('goals')
-                .document(user.uid)
-                .collection('userGoals')
-                .add({
-              'title': goal.title,
-              'colorValue': goal.color.value,
-              'timeSpent': goal.timeSpent.toString(),
-              'selectedPuddingIndex': goal.selectedPuddingIndex,
-            }).then((doc) {
-              goal.id = doc.documentID;
+            addGoalToDestination(goal: goal, destination: 'userGoals').whenComplete(() {
+              Navigator.pop(context);
+              Flushbar(
+                message: 'Goal created!',
+                icon: Icon(Icons.check, color: Colors.white,),
+                duration: Duration(seconds: 3),
+              ).show(context);
             });
-            Navigator.pop(context);
-            Flushbar(
-              message: 'Goal created!',
-              icon: Icon(Icons.check, color: Colors.white,),
-              duration: Duration(seconds: 3),
-            ).show(context);
           },
           child: Text('OK'),
         ),
@@ -325,3 +313,4 @@ class PuddingButton extends StatelessWidget {
     );
   }
 }
+

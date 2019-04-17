@@ -3,8 +3,7 @@ import 'themecolors.dart';
 import 'dart:async';
 import 'goals.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'auth.dart';
+import 'package:flushbar/flushbar.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.
 /// TODO OVERALL:
@@ -98,9 +97,15 @@ class _GoalPageState extends State<GoalPage> {
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () {
-                          Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(widget.goal.id).delete();
-                          Navigator.pop(context);
-                          exit();
+                          archiveGoal(widget.goal).whenComplete(() {
+                            Navigator.pop(context);
+                            exit();
+                            Flushbar(
+                              message: 'Goal successfully archived!',
+                              icon: Icon(Icons.archive),
+                              duration: Duration(seconds: 3),
+                            ).show(context);
+                          });
                         },
                         child: Text('Yes'),
                       ),

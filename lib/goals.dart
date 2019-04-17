@@ -100,10 +100,11 @@ class _GoalsState extends State<Goals> {
                   return ListView.builder(
                       itemCount: goalList.length,
                       itemBuilder: (context, i) {
+                        final Goal currentGoal = goalList[i];
                         return Dismissible(
-                          key: Key(goalList[i].toString()),
+                          key: Key(currentGoal.id),
                           child: GoalsCard(
-                            goal: goalList[i],
+                            goal: currentGoal,
                           ),
                           direction: DismissDirection.endToStart,
                           background:  Container(
@@ -117,10 +118,20 @@ class _GoalsState extends State<Goals> {
                             ),
                           ),
                           onDismissed: (direction) {
-                            setState(() {
-                            goalList.removeAt(i);
-                          });
-                            archiveGoal(goalList[i], context);
+                            print('$goalList, removing $i');
+                            goalList.remove(currentGoal);
+                            print(goalList);
+                            setState(() {});
+                            archiveGoal(currentGoal).then((goal){
+                              Flushbar(
+                                message: 'Goal archived!',
+                                mainButton: FlatButton(
+                                  child: Text('Undo'),
+                                  onPressed: () => unarchiveGoal(currentGoal).whenComplete(() => setState(() {})),
+                                ),
+                                duration: Duration(seconds: 3),
+                              ).show(context);
+                            });
                           },
                         );
                       }); //TODO: Implement ListView goals
@@ -199,10 +210,39 @@ Duration parseDuration(String s) {
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
 }
 
-void archiveGoal(Goal goal, BuildContext context) {
-  Flushbar(
-    icon: Icon(Icons.archive),
-    message: 'Goal archived!',
-  ).show(context);
-  
+Future<Goal> addGoalToDestination({@required Goal goal, @required String destination}) async {
+  if (!['userGoals', 'archive'].contains(destination))
+    throw Exception("Incorrect destination stated! Only 'userGoals' and 'archive' are allowed.");
+  Goal addedGoal;
+  await Firestore.instance
+      .collection('goals')
+      .document(user.uid)
+      .collection(destination)
+      .add({
+    'title': goal.title,
+    'colorValue': goal.color.value,
+    'timeSpent': goal.timeSpent.toString(),
+    'selectedPuddingIndex': goal.selectedPuddingIndex,
+  }).then((doc) {
+    goal.id = doc.documentID;
+    addedGoal = goal;
+  });
+  return addedGoal;
+}
+
+
+Future<Goal> archiveGoal(Goal goal) async {
+  Goal archivedGoal;
+  await Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(goal.id).delete().whenComplete(() {
+    addGoalToDestination(goal: goal, destination: 'archive').then((goal) => archivedGoal = goal);
+  });
+  return archivedGoal;
+}
+
+Future<Goal> unarchiveGoal(Goal goal) async {
+  Goal unarchivedGoal;
+  await Firestore.instance.collection('goals').document(user.uid).collection('archive').document(goal.id).delete().whenComplete(() {
+    addGoalToDestination(goal: goal, destination: 'userGoals').then((goal) => unarchivedGoal = goal);
+  });
+  return unarchivedGoal;
 }
