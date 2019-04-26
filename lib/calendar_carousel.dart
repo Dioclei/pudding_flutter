@@ -35,7 +35,7 @@ class _CalendarState extends State<Calendar> {
         markedDatesMap: _markedDateMap,
         height: 420.0,
         selectedDateTime: _currentDate,
-        daysHaveCircularBorder: false,
+        daysHaveCircularBorder: null,
 
         /// null for not rendering any border, true for circular border, false for rectangular border
       ),
