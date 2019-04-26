@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final _widgetOptions = [
     Dashboard(),
-    Timetable(),
+    PudCalendar(),
     Goals(),
     Social(),
   ];
@@ -64,13 +64,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final _appBarOptions = [
       dashboardAppBar(context),
-      timetableAppBar(context),
+      calendarAppBar(context),
       goalsAppBar(context),
       socialAppBar(context),
     ];
 
     final _changingFAB = <FloatingActionButton>[
-      timetableFloatingActionButton(context),
+      calendarFloatingActionButton(context),
       goalsFloatingActionButton(context),
       socialFloatingActionButton(context),
     ];
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: _appBarOptions.elementAt(_selectedIndex),
       floatingActionButton: (_selectedIndex != 0)
           ? _changingFAB.elementAt(_selectedIndex -
-          1) // -1 because at _selectedIndex = 1 (timetable), FAB is index 0.
+          1) // -1 because at _selectedIndex = 1 (calendar), FAB is index 0.
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationBar(
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.table_chart, color: Colors.brown[600],),
               title: Text(
-                "Timetable", style: TextStyle(color: Colors.brown[600]),)),
+                "Calendar", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
               icon: Icon(Icons.flag, color: Colors.brown[600],),
               title: Text(
