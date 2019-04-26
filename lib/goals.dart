@@ -74,6 +74,7 @@ class Goals extends StatefulWidget {
 class _GoalsState extends State<Goals> {
   @override
   Widget build(BuildContext context) {
+    final BuildContext overallContext = context;
     return StreamBuilder(
         stream: Firestore.instance
             .collection('goals')
@@ -117,20 +118,45 @@ class _GoalsState extends State<Goals> {
                               ),
                             ),
                           ),
+                          confirmDismiss: (direction) async {
+                            bool confirmed;
+                            await showDialog(
+                                context: context,
+                              builder: (context) {
+                                  return AlertDialog(
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          confirmed = true;
+                                        },
+                                        child: Text('Yes'),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          confirmed = false;
+                                        },
+                                        child: Text('No'),
+                                      ),
+                                    ],
+                                  );
+                              }
+                            );
+                          },
                           onDismissed: (direction) {
-                            print('$goalList, removing $i');
-                            goalList.remove(currentGoal);
-                            print(goalList);
-                            setState(() {});
-                            archiveGoal(currentGoal).then((goal){
+                            archiveGoal(currentGoal).whenComplete(() {
+                              setState(() {});
                               Flushbar(
                                 message: 'Goal archived!',
                                 mainButton: FlatButton(
                                   child: Text('Undo'),
-                                  onPressed: () => unarchiveGoal(currentGoal).whenComplete(() => setState(() {})),
+                                  onPressed: () => unarchiveGoal(currentGoal).whenComplete(() {
+                                    setState(() {});
+                                  }),
                                 ),
                                 duration: Duration(seconds: 3),
-                              ).show(context);
+                              ).show(overallContext);
                             });
                           },
                         );

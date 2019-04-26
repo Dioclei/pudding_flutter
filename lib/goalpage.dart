@@ -4,6 +4,7 @@ import 'dart:async';
 import 'goals.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flushbar/flushbar.dart';
+import 'barchart.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.
 /// TODO OVERALL:
@@ -198,10 +199,12 @@ class _GoalPageState extends State<GoalPage> {
                         if (_buttonText == 'Start') {
                           _buttonText = 'Give up';
                           _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                            // TODO: RESEARCH: Will this still run if the screen is turned off?
+                            // TODO: RESEARCH: Will this still run if the screen is turned off? NO, APP IS SUSPENDED!!
                             setState(() {
-                              if (_displayedDuration > const Duration(seconds: 0))
+                              if (_displayedDuration > const Duration(seconds: 0)) {
                                 _displayedDuration = _displayedDuration - Duration(seconds: 1);
+                                print(_displayedDuration.inSeconds);
+                              }
                                 // TODO: Callback when timer finishes: Add (timestamp & duration) to database, add to timetable? make a ding sound, etc.
                               else {
                                 timer.cancel();
@@ -290,7 +293,7 @@ class GoalStatPage extends StatelessWidget {
         ),
         body: TabBarView(children: [
           // TODO: Add Bar charts for day, week, and month view.
-          Text('Day'),
+          Chart(),
           Text('Week'),
           Text('Month'),
         ]),
