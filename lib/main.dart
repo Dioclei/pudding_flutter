@@ -8,7 +8,7 @@ import 'dashboard.dart';
 
 /// Set this to false if the initial sign in page is creating issues for you!
 /// Note that setting this to false will cause errors in the social functions.
-const bool signInEnabled = true;
+const bool signInEnabled = false;
 
 void main() {
   (signInEnabled)
@@ -19,6 +19,7 @@ void main() {
 final ThemeData themeData = ThemeData(
   primarySwatch: Colors.brown,
   canvasColor: Colors.yellow[100],
+  fontFamily: 'Product Sans',
 );
 
 class MyApp extends StatelessWidget {

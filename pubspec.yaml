@@ -56,6 +56,12 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
   - icons/default_pudding.png
+  fonts: 
+  - family : Product Sans
+    fonts :
+      - asset : assets/Product Sans Regular.ttf
+      - asset : assets/Product Sans Italic.ttf
+        style : italic
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

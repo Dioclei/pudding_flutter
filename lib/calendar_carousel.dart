@@ -22,10 +22,37 @@ class _CalendarState extends State<Calendar> {
         onDayPressed: (DateTime date, List<Event> dates) {
           this.setState(() => _currentDate = date);
         },
+        weekdayTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          fontSize: 18,
+        ),
+        markedDateMoreCustomTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          fontSize: 18,
+        ),
         weekendTextStyle: TextStyle(
           color: Colors.red,
+          fontFamily: 'Product Sans',
+          fontSize: 18,
+        ),
+        daysTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          fontSize: 18,
+        ),
+        nextDaysTextStyle: TextStyle(
+          fontSize: 16,
+          fontFamily: 'Product Sans'
+        ),
+        prevDaysTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          fontSize:16,
         ),
         thisMonthDayBorderColor: Colors.grey,
+        headerTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          color: Colors.brown,
+          fontSize: 25,
+        ),
 //      weekDays: null, /// for pass null when you do not want to render weekDays
 //      headerText: Container( /// Example for rendering custom header
 //        child: Text('Custom Header'),
