@@ -53,6 +53,14 @@ class _CalendarState extends State<Calendar> {
           color: Colors.brown,
           fontSize: 25,
         ),
+        inactiveDaysTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          fontSize: 18,
+        ),
+        inactiveWeekendTextStyle: TextStyle(
+          fontFamily: 'Product Sans',
+          fontSize: 18,
+        ),
 //      weekDays: null, /// for pass null when you do not want to render weekDays
 //      headerText: Container( /// Example for rendering custom header
 //        child: Text('Custom Header'),
