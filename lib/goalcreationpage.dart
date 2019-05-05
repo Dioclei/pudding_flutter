@@ -195,13 +195,13 @@ class _GoalCreationPageState extends State<GoalCreationPage> {
               selectedPuddingIndex: selectedPuddingIndex,
             );
             addGoalToDestination(goal: goal, destination: 'userGoals').whenComplete(() {
-              Navigator.pop(context);
               Flushbar(
                 message: 'Goal created!',
                 icon: Icon(Icons.check, color: Colors.white,),
                 duration: Duration(seconds: 3),
               ).show(context);
             });
+            Navigator.pop(context);
           },
           child: Text('OK'),
         ),

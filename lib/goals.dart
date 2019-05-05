@@ -118,24 +118,22 @@ class _GoalsState extends State<Goals> {
                               ),
                             ),
                           ),
-                          confirmDismiss: (direction) async {
-                            bool confirmed;
-                            await showDialog(
+                          confirmDismiss: (direction) {
+                            return showDialog<bool>(
                                 context: context,
-                              builder: (context) {
+                                builder: (context) {
                                   return AlertDialog(
+                                    content: Text('Are you sure you want to archive this goal ${currentGoal.title}?'),
                                     actions: <Widget>[
                                       FlatButton(
                                         onPressed: () {
-                                          Navigator.pop(context);
-                                          confirmed = true;
+                                          Navigator.pop(context, true);
                                         },
                                         child: Text('Yes'),
                                       ),
                                       FlatButton(
                                         onPressed: () {
-                                          Navigator.pop(context);
-                                          confirmed = false;
+                                          Navigator.pop(context, false);
                                         },
                                         child: Text('No'),
                                       ),
@@ -148,9 +146,9 @@ class _GoalsState extends State<Goals> {
                             archiveGoal(currentGoal).whenComplete(() {
                               setState(() {});
                               Flushbar(
-                                message: 'Goal archived!',
+                                message: '${currentGoal.title} goal successfully archived!',
                                 mainButton: FlatButton(
-                                  child: Text('Undo'),
+                                  child: Text('Undo', style: TextStyle(color: Colors.white),),
                                   onPressed: () => unarchiveGoal(currentGoal).whenComplete(() {
                                     setState(() {});
                                   }),

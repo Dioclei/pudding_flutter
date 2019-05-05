@@ -5,14 +5,19 @@ import 'goals.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flushbar/flushbar.dart';
 import 'barchart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'auth.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.
 /// TODO OVERALL:
-/// 1. Running in background when screen is switched off
+/// DONE, It will run in background. 1. Running in background when screen is switched off
 /// 2. Decide whether the timer should be cancelled when the user gets out of that specific screen. Probably?
 /// 3. Decide on exactly what we are doing with the timing data. Is there a need to add the timestamps to database?
 /// 4. Appearances: Animated pudding showing time spent.
 /// 5. Stats: Bar charts
+///
+/// When timer completes, add datetime.toiso8601string & duration to database.
+/// Stats will grab the datatime & duration & display it.
 
 class GoalPage extends StatefulWidget {
   final Goal goal;
@@ -27,12 +32,19 @@ class _GoalPageState extends State<GoalPage> {
   String _buttonText = 'Start';
   Duration _initialDuration = Duration(minutes: 25); /// Duration set at first.
   Duration _displayedDuration;
-  Timer _timer;
+  Timer _timer = Timer(Duration.zero, () {}); //instantiate a timer.
 
   @override
   void initState() {
     _displayedDuration = _initialDuration;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    print('disposed timer!');
+    super.dispose();
   }
 
   @override
@@ -51,7 +63,7 @@ class _GoalPageState extends State<GoalPage> {
                   return AlertDialog(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
                     content: Text('Are you sure you want to leave? This will forfeit your current progress!'),
-                    //TODO: DISCUSS: Should timer be cancelled? If not run in background is quite hard...
+                    //TODO: Callback if timer is forfeited.
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () {
@@ -199,7 +211,7 @@ class _GoalPageState extends State<GoalPage> {
                         if (_buttonText == 'Start') {
                           _buttonText = 'Give up';
                           _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                            // TODO: RESEARCH: Will this still run if the screen is turned off? NO, APP IS SUSPENDED!!
+                            // TODO: RESEARCH: Will this still run if the screen is turned off? YES, as long as app is not killed. And by android it won't die randomly in the background.
                             setState(() {
                               if (_displayedDuration > const Duration(seconds: 0)) {
                                 _displayedDuration = _displayedDuration - Duration(seconds: 1);
@@ -283,21 +295,59 @@ class GoalStatPage extends StatelessWidget {
           bottom: TabBar(
             indicatorColor: Colors.white,
             tabs: <Widget>[
-              Tab(
-                child: Text('Day'),
-              ),
               Tab(child: Text('Week')),
               Tab(child: Text('Month')),
             ],
           ),
         ),
         body: TabBarView(children: [
-          // TODO: Add Bar charts for day, week, and month view.
-          Chart(),
-          Text('Week'),
-          Text('Month'),
+          WeekTab(),
+          MonthTab(),
         ]),
       ),
+    );
+  }
+}
+
+class MonthTab extends StatelessWidget {
+  const MonthTab({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MonthChart(
+        data: [0,0,0,0,0,0,1,2,333,23,400,102,167,256,302,40,10,0,0,0,0]
+    );
+  }
+}
+
+class WeekTab extends StatelessWidget {
+  const WeekTab({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document().snapshots(),
+      builder: (context, snapshot) {
+        return Column(
+          children: <Widget>[
+            Text('Hello', style: TextStyle(color: Colors.white),),
+            Expanded(
+              child: WeekChart(
+                mon: 5,
+                tue: 2,
+                wed: 29,
+                thu: 300,
+                fri: 40,
+                sat: 186,
+              ),
+            ),
+          ],
+        );
+      }
     );
   }
 }
