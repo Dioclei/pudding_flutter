@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'themecolors.dart';
-import 'auth.dart';
+import 'package:pudding_flutter/themecolors.dart';
+import 'package:pudding_flutter/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'profilepage.dart';
+import 'package:pudding_flutter/social/profilepage.dart';
 import 'package:flushbar/flushbar.dart';
 
 /// SOCIAL

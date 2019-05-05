@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'auth.dart';
-import 'goalcreationpage.dart';
-import 'goalpage.dart';
+import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/goals/goalcreationpage.dart';
+import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:flushbar/flushbar.dart';
 
 /// GOALS
@@ -10,16 +10,15 @@ import 'package:flushbar/flushbar.dart';
 /// collection('goals')
 ///   document(user.uid)
 ///     collection('userGoals')
-///       totalDuration: Duration.toString TODO: implement calculation of totalDuration.
 ///       document(goal_id)
 ///         name: String
 ///         desc: String
-///         timeSpent: Duration.toString
 ///         colorValue: Color.value
 ///         collection('events') TODO: implement adding events and calculating the duration.
 ///           document(event_id)
-///             startTime: Timestamp
-///             endTime: Timestamp
+///             durationInMinutes: int
+///             completedTime: DateTime.now().toIso8601String()
+
 
 enum Layout {
   list,
@@ -90,7 +89,6 @@ class _GoalsState extends State<Goals> {
                       id: doc.documentID,
                       title: doc['title'],
                       color: Color(doc['colorValue']),
-                      timeSpent: parseDuration(doc['timeSpent']),
                       selectedPuddingIndex: doc['selectedPuddingIndex'],
                     );
                 })
@@ -185,12 +183,10 @@ class Goal {
   String id;
   String title;
   Color color;
-  Duration timeSpent;
   int selectedPuddingIndex;
 
   Goal(
       {this.id, @required this.title,
-      @required this.timeSpent,
       @required this.color,
       this.selectedPuddingIndex: 0});
 }
@@ -211,7 +207,7 @@ class GoalsCard extends StatelessWidget {
           child: ListTile(
             leading: Icon(Icons.library_music),
             title: Text(goal.title),
-            subtitle: Text('Time spent: ${goal.timeSpent}, Selected Index: ${goal.selectedPuddingIndex}'),
+            subtitle: Text('Selected Index: ${goal.selectedPuddingIndex}'),
           ),
         ),
       ),
@@ -219,6 +215,7 @@ class GoalsCard extends StatelessWidget {
   }
 }
 
+/*
 Duration parseDuration(String s) {
   int hours = 0;
   int minutes = 0;
@@ -232,7 +229,7 @@ Duration parseDuration(String s) {
   }
   micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
-}
+}*/
 
 Future<Goal> addGoalToDestination({@required Goal goal, @required String destination}) async {
   if (!['userGoals', 'archive'].contains(destination))
@@ -245,7 +242,6 @@ Future<Goal> addGoalToDestination({@required Goal goal, @required String destina
       .add({
     'title': goal.title,
     'colorValue': goal.color.value,
-    'timeSpent': goal.timeSpent.toString(),
     'selectedPuddingIndex': goal.selectedPuddingIndex,
   }).then((doc) {
     goal.id = doc.documentID;

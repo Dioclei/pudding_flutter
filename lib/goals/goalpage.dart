@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'themecolors.dart';
+import 'package:pudding_flutter/themecolors.dart';
 import 'dart:async';
-import 'goals.dart';
+import 'package:pudding_flutter/goals/goals.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flushbar/flushbar.dart';
-import 'barchart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'auth.dart';
+import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/goals/goalstatpage.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.
 /// TODO OVERALL:
 /// DONE, It will run in background. 1. Running in background when screen is switched off
 /// 2. Decide whether the timer should be cancelled when the user gets out of that specific screen. Probably?
-/// 3. Decide on exactly what we are doing with the timing data. Is there a need to add the timestamps to database?
+/// 3. Decide on exactly what we are doing with the timing data. Adding the completed duration to the database for now
 /// 4. Appearances: Animated pudding showing time spent.
 /// 5. Stats: Bar charts
 ///
@@ -211,17 +211,21 @@ class _GoalPageState extends State<GoalPage> {
                         if (_buttonText == 'Start') {
                           _buttonText = 'Give up';
                           _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                            // TODO: RESEARCH: Will this still run if the screen is turned off? YES, as long as app is not killed. And by android it won't die randomly in the background.
                             setState(() {
                               if (_displayedDuration > const Duration(seconds: 0)) {
                                 _displayedDuration = _displayedDuration - Duration(seconds: 1);
                                 print(_displayedDuration.inSeconds);
                               }
-                                // TODO: Callback when timer finishes: Add (timestamp & duration) to database, add to timetable? make a ding sound, etc.
                               else {
+                                /// Callback when timer finishes.
                                 timer.cancel();
                                 _buttonText = 'Start';
                                 _displayedDuration = _initialDuration;
+                                Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(widget.goal.id).collection('events')
+                                    .add({
+                                      'durationInMinutes': _initialDuration,
+                                      'dateCompleted': DateTime.now().toIso8601String(),
+                                    });
                               }
                             });
                           });
@@ -275,79 +279,6 @@ class _GoalPageState extends State<GoalPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class GoalStatPage extends StatelessWidget {
-  final Goal goal;
-
-  GoalStatPage({@required this.goal});
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: goal.color,
-          title: Text('Stats'),
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            tabs: <Widget>[
-              Tab(child: Text('Week')),
-              Tab(child: Text('Month')),
-            ],
-          ),
-        ),
-        body: TabBarView(children: [
-          WeekTab(),
-          MonthTab(),
-        ]),
-      ),
-    );
-  }
-}
-
-class MonthTab extends StatelessWidget {
-  const MonthTab({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MonthChart(
-        data: [0,0,0,0,0,0,1,2,333,23,400,102,167,256,302,40,10,0,0,0,0]
-    );
-  }
-}
-
-class WeekTab extends StatelessWidget {
-  const WeekTab({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document().snapshots(),
-      builder: (context, snapshot) {
-        return Column(
-          children: <Widget>[
-            Text('Hello', style: TextStyle(color: Colors.white),),
-            Expanded(
-              child: WeekChart(
-                mon: 5,
-                tue: 2,
-                wed: 29,
-                thu: 300,
-                fri: 40,
-                sat: 186,
-              ),
-            ),
-          ],
-        );
-      }
     );
   }
 }

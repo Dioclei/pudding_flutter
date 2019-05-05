@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
-import 'goals.dart';
+import 'package:pudding_flutter/goals/goals.dart';
 
 class GoalCreationPage extends StatefulWidget {
   @override
@@ -191,7 +191,6 @@ class _GoalCreationPageState extends State<GoalCreationPage> {
             Goal goal = new Goal(
               title: title,
               color: selectedColor,
-              timeSpent: Duration(days: 0),
               selectedPuddingIndex: selectedPuddingIndex,
             );
             addGoalToDestination(goal: goal, destination: 'userGoals').whenComplete(() {

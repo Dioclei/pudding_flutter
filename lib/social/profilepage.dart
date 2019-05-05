@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'social.dart';
-import 'auth.dart';
+import 'package:pudding_flutter/social/social.dart';
+import 'package:pudding_flutter/auth.dart';
 
 class ProfilePage extends StatelessWidget {
   final String uid;
