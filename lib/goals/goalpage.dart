@@ -32,11 +32,12 @@ class _GoalPageState extends State<GoalPage> {
   String _buttonText = 'Start';
   Duration _initialDuration = Duration(minutes: 25); /// Duration set at first.
   Duration _displayedDuration;
-  Timer _timer = Timer(Duration.zero, () {}); //instantiate a timer.
+  Timer _timer; //instantiate a timer.
 
   @override
   void initState() {
     _displayedDuration = _initialDuration;
+    _timer = Timer(Duration.zero, () {});
     super.initState();
   }
 
@@ -104,9 +105,10 @@ class _GoalPageState extends State<GoalPage> {
                 context: context,
               builder: (context) {
                   return AlertDialog(
-                    content: Center(child:
-                    Text('Are you sure you want to delete this goal?')
-                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                    title: Text('Archive Goal'),
+                    content: Text('Are you sure you want to delete this goal?'),
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () {
@@ -223,7 +225,7 @@ class _GoalPageState extends State<GoalPage> {
                                 _displayedDuration = _initialDuration;
                                 Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(widget.goal.id).collection('events')
                                     .add({
-                                      'durationInMinutes': _initialDuration,
+                                      'durationInMinutes': _initialDuration.inMinutes,
                                       'dateCompleted': DateTime.now().toIso8601String(),
                                     });
                               }

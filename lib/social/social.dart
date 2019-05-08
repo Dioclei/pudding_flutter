@@ -503,6 +503,28 @@ void showFriendList(BuildContext context) {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              color: Colors.brown,
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.search, color: Colors.brown, size: 32,),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: StreamBuilder(
                 stream: Firestore.instance.collection('users').document(user.uid).snapshots(),

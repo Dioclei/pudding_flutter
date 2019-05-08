@@ -4,6 +4,7 @@ import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/goals/goalcreationpage.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:pudding_flutter/goals/goalarchivepage.dart';
 
 /// GOALS
 /// Data Structure
@@ -17,7 +18,7 @@ import 'package:flushbar/flushbar.dart';
 ///         collection('events') TODO: implement adding events and calculating the duration.
 ///           document(event_id)
 ///             durationInMinutes: int
-///             completedTime: DateTime.now().toIso8601String()
+///             completedDate: DateTime.now().toIso8601String()
 
 
 enum Layout {
@@ -43,8 +44,8 @@ AppBar goalsAppBar(BuildContext context) {
             print('Change layout'), //TODO: Change layout with stateful widget.
       ),
       IconButton(
-        icon: Icon(Icons.settings),
-        onPressed: () => print('Open settings'), //TODO: Goals settings: like whether to lock up the screen etc.? or shld we just lock the screen anyway
+        icon: Icon(Icons.unarchive),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GoalArchivePage())),
       )
     ],
   );
@@ -121,6 +122,9 @@ class _GoalsState extends State<Goals> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                                    title: Text('Archive Goal'),
                                     content: Text('Are you sure you want to archive this goal ${currentGoal.title}?'),
                                     actions: <Widget>[
                                       FlatButton(
@@ -169,7 +173,7 @@ class _GoalsState extends State<Goals> {
               }
             } else
               return Center(
-                child: Text('No goals. Add new goal?'),
+                child: Text("It's feeling empty in here... Add a new goal!"),
               );
           } else
             return Center(
@@ -265,4 +269,8 @@ Future<Goal> unarchiveGoal(Goal goal) async {
     addGoalToDestination(goal: goal, destination: 'userGoals').then((goal) => unarchivedGoal = goal);
   });
   return unarchivedGoal;
+}
+
+Future deleteGoal(Goal goal) {
+  return Firestore.instance.collection('goals').document(user.uid).collection('archive').document(goal.id).delete();
 }
