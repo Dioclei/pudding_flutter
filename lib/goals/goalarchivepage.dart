@@ -46,23 +46,39 @@ class _GoalArchivePageState extends State<GoalArchivePage> {
                     child: ArchiveTile(goal: goals[i]),
                     direction: DismissDirection.horizontal,
                     background:  Container(
-                      alignment: AlignmentDirectional.centerStart,
                       color: Colors.red,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Icon(Icons.delete_forever,
-                          color: Colors.white,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                            child: Icon(Icons.delete_forever,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text('Delete', style: TextStyle(color: Colors.white),),
+                          ),
+                        ],
                       ),
                     ),
                     secondaryBackground: Container(
-                      alignment: AlignmentDirectional.centerEnd,
                       color: Colors.green[800],
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                        child: Icon(Icons.unarchive,
-                          color: Colors.white,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text('Unarchive', style: TextStyle(color: Colors.white),),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                            child: Icon(Icons.unarchive,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -169,19 +185,38 @@ class ArchiveTile extends StatelessWidget {
       height: 100,
       width: double.infinity,
       color: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          color: goal.color,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(goal.title,
-            style: TextStyle(
-              color: Colors.white,
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: goal.color,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Image(image: AssetImage('icons/pudding${goal.selectedPuddingIndex}.png'),),
+              ),
             ),
           ),
-        ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(goal.title, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Time spent: '),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

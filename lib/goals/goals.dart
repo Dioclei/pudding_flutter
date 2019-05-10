@@ -108,13 +108,21 @@ class _GoalsState extends State<Goals> {
                           ),
                           direction: DismissDirection.endToStart,
                           background:  Container(
-                            alignment: AlignmentDirectional.centerEnd,
                             color: Colors.green,
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                              child: Icon(Icons.archive,
-                                color: Colors.white,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('Archive', style: TextStyle(color: Colors.white),),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                                  child: Icon(Icons.archive,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           confirmDismiss: (direction) {
@@ -160,7 +168,7 @@ class _GoalsState extends State<Goals> {
                             });
                           },
                         );
-                      }); //TODO: Implement ListView goals
+                      });
                 case Layout.grid:
                   return GridView.builder(
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
