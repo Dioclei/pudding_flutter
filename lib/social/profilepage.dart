@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'social.dart';
-import 'auth.dart';
+import 'package:pudding_flutter/social/social.dart';
+import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/themecolors.dart';
 
 class ProfilePage extends StatelessWidget {
   final String uid;
@@ -18,6 +19,7 @@ class ProfilePage extends StatelessWidget {
     final DocumentReference users =
         Firestore.instance.collection('users').document(uid);
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text('Profile'),
       ),

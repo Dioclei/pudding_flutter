@@ -46,9 +46,9 @@ bool checkIfSignedIn() => user != null;
 
 Future<FirebaseUser> switchAccounts() async {
   handleSignOut();
-  handleSignIn().then((FirebaseUser _user) {
-    print("${_user.displayName} is signed in!");
+  return handleSignIn().then((FirebaseUser _user) {
+    print("${_user.displayName} is signed i n!");
     user = _user;
+    return user;
   });
-  return user;
 }

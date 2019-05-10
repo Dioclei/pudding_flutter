@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'themecolors.dart';
 import 'auth.dart';
 import 'signinpage.dart';
-import 'social.dart';
+import 'package:pudding_flutter/social/social.dart';
 import 'timetable.dart';
-import 'goals.dart';
+import 'package:pudding_flutter/goals/goals.dart';
 import 'dashboard.dart';
 
 /// Set this to false if the initial sign in page is creating issues for you!
@@ -15,11 +16,6 @@ void main() {
       ? runApp(checkIfSignedIn() ? MyApp() : SignInRoute()) //checks if signed in.
       : runApp(MyApp());
 }
-
-final ThemeData themeData = ThemeData(
-  primarySwatch: Colors.brown,
-  canvasColor: Colors.yellow[100],
-);
 
 class MyApp extends StatelessWidget {
 
@@ -47,7 +43,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
   int _selectedIndex = 0;
 
   final _widgetOptions = [
@@ -56,9 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
     Goals(),
     Social(),
   ];
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: _appBarOptions.elementAt(_selectedIndex),
       floatingActionButton: (_selectedIndex != 0)
           ? _changingFAB.elementAt(_selectedIndex -
@@ -85,18 +78,22 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            backgroundColor: backgroundColor,
               icon: Icon(Icons.home, color: Colors.brown[600],),
               title: Text(
                 "Dashboard", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
+              backgroundColor: backgroundColor,
               icon: Icon(Icons.table_chart, color: Colors.brown[600],),
               title: Text(
                 "Calendar", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
+              backgroundColor: backgroundColor,
               icon: Icon(Icons.flag, color: Colors.brown[600],),
               title: Text(
                 "Goals", style: TextStyle(color: Colors.brown[600]),)),
           BottomNavigationBarItem(
+              backgroundColor: backgroundColor,
               icon: Icon(Icons.people, color: Colors.brown[600],),
               title: Text(
                 "Social", style: TextStyle(color: Colors.brown[600]),)),
@@ -106,8 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
     );
   }
 
