@@ -9,13 +9,7 @@ import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/goals/goalstatpage.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.
-/// TODO OVERALL:
-/// DONE, It will run in background. 1. Running in background when screen is switched off
-/// 2. Decide whether the timer should be cancelled when the user gets out of that specific screen. Probably?
-/// 3. Decide on exactly what we are doing with the timing data. Adding the completed duration to the database for now
-/// 4. Appearances: Animated pudding showing time spent.
-/// 5. Stats: Bar charts
-///
+
 /// When timer completes, add datetime.toiso8601string & duration to database.
 /// Stats will grab the datatime & duration & display it.
 

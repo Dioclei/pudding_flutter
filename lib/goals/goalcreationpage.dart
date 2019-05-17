@@ -259,16 +259,16 @@ class _PuddingPickerState extends State<PuddingPicker> {
       children: <Widget>[
         PuddingButton(onTap: () => setState(() {
           select(0);
-        }), assetImage: AssetImage('icons/default_pudding.png'), selected: selected[0],),
+        }), assetImage: AssetImage('icons/pudding0.png'), selected: selected[0],),
         PuddingButton(onTap: () => setState(() {
           select(1);
-        }), assetImage: AssetImage('icons/default_pudding.png'), selected: selected[1],),
+        }), assetImage: AssetImage('icons/pudding1.png'), selected: selected[1],),
         PuddingButton(onTap: () => setState(() {
           select(2);
-        }), assetImage: AssetImage('icons/default_pudding.png'), selected: selected[2],),
+        }), assetImage: AssetImage('icons/pudding2.png'), selected: selected[2],),
         PuddingButton(onTap: () => setState(() {
           select(3);
-        }), assetImage: AssetImage('icons/default_pudding.png'), selected: selected[3],),
+        }), assetImage: AssetImage('icons/pudding3.png'), selected: selected[3],),
       ],
     );
   }

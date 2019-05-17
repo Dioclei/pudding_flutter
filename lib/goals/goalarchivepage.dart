@@ -181,42 +181,45 @@ class ArchiveTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: double.infinity,
-      color: Colors.transparent,
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: goal.color,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Image(image: AssetImage('icons/pudding${goal.selectedPuddingIndex}.png'),),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Container(
+        height: 100,
+        width: double.infinity,
+        color: Colors.transparent,
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: goal.color,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Image(image: AssetImage('icons/pudding${goal.selectedPuddingIndex}.png'),),
+                  ),
+                ),
               ),
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(goal.title, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Time spent: '),
-              )
-            ],
-          ),
-        ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(goal.title, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Time spent: '),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

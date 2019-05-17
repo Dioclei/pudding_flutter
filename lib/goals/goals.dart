@@ -56,12 +56,16 @@ FloatingActionButton goalsFloatingActionButton(BuildContext context) {
     child: Icon(Icons.library_add),
     elevation: 2.0,
     onPressed: () {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return GoalCreationPage();
-        },
-      );
+      addGoal(context);
+    },
+  );
+}
+
+addGoal(context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return GoalCreationPage();
     },
   );
 }

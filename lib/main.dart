@@ -6,6 +6,10 @@ import 'package:pudding_flutter/social/social.dart';
 import 'timetable.dart';
 import 'package:pudding_flutter/goals/goals.dart';
 import 'dashboard.dart';
+import 'package:pudding_flutter/pudding_calendar.dart';
+import 'package:flutter/services.dart';
+import 'package:unicorndial/unicorndial.dart';
+
 
 /// Set this to false if the initial sign in page is creating issues for you!
 /// Note that setting this to false will cause errors in the social functions.
@@ -15,6 +19,7 @@ void main() {
   (signInEnabled)
       ? runApp(checkIfSignedIn() ? MyApp() : SignInRoute()) //checks if signed in.
       : runApp(MyApp());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: backgroundColor));
 }
 
 class MyApp extends StatelessWidget {
@@ -36,24 +41,93 @@ class MyHomePage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 
 
 }
 
-class _MyHomePageState extends State<MyHomePage> {
 
-  int _selectedIndex = 0;
+class MyHomePageState extends State<MyHomePage> {
 
-  final _widgetOptions = [
-    Dashboard(),
-    PudCalendar(),
-    Goals(),
-    Social(),
-  ];
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+
+    final _widgetOptions = [
+      Dashboard(this),
+      PudCalendar(),
+      Goals(),
+      Social(),
+    ];
+
+    /// Dashboard Floating Action Child Buttons
+    final List<UnicornButton> childButtons = [
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Friend",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: Colors.redAccent,
+            mini: true,
+            child: Icon(Icons.person_add),
+            onPressed: () {
+              setState(() {
+                selectedIndex = 3;
+              });
+              },
+          )
+      ),
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Goal",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: 'goals',
+            backgroundColor: Colors.blueAccent,
+            mini: true,
+            child: Icon(Icons.library_add),
+            onPressed: () {
+              setState(() {
+                selectedIndex = 2;
+                addGoal(context);
+              });
+              },
+          )
+      ),
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Event",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: Colors.yellow,
+            mini: true,
+            child: Icon(Icons.add_comment),
+            onPressed: () {
+              setState(() {
+                selectedIndex = 1;
+              });
+            },
+          )
+      ),
+    ];
+    final dashboardFloatingActionButton = UnicornDialer(
+      backgroundColor: backgroundColor.withOpacity(0.9),
+      parentButtonBackground: Colors.brown,
+      orientation: UnicornOrientation.VERTICAL,
+      parentButton: Icon(Icons.add),
+      childButtons: childButtons,
+    );
+
+    /// App Bars
     final _appBarOptions = [
       dashboardAppBar(context),
       calendarAppBar(context),
@@ -61,7 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
       socialAppBar(context),
     ];
 
-    final _changingFAB = <FloatingActionButton>[
+    /// Floating Action Buttons
+    final _changingFAB = [
+      dashboardFloatingActionButton,
       calendarFloatingActionButton(context),
       goalsFloatingActionButton(context),
       socialFloatingActionButton(context),
@@ -69,11 +145,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: _appBarOptions.elementAt(_selectedIndex),
-      floatingActionButton: (_selectedIndex != 0)
+      appBar: _appBarOptions.elementAt(selectedIndex),
+      floatingActionButton: _changingFAB.elementAt(selectedIndex),/*(_selectedIndex != 0)
           ? _changingFAB.elementAt(_selectedIndex -
           1) // -1 because at _selectedIndex = 1 (calendar), FAB is index 0.
-          : null,
+          : null,*/
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -98,19 +174,19 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(
                 "Social", style: TextStyle(color: Colors.brown[600]),)),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         onTap: _onItemTapped,
       ),
 
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(selectedIndex),
       ),
     );
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
 }

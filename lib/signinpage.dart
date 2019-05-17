@@ -28,7 +28,7 @@ class SignInScreen extends StatelessWidget {
     return Scaffold(
       appBar: null,
       body: Container(
-        color: Colors.yellow[50],
+        color: backgroundColor,
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
