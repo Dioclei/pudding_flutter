@@ -3,6 +3,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:flutter/material.dart';
+import 'timetable.dart';
 
 class Calendar extends StatefulWidget {
   Calendar({Key key,}) : super(key: key);
@@ -21,6 +22,10 @@ class _CalendarState extends State<Calendar> {
       child: CalendarCarousel<Event>(
         onDayPressed: (DateTime date, List<Event> dates) {
           this.setState(() => _currentDate = date);
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Timetable()),
+          );
         },
         weekendTextStyle: TextStyle(
           color: Colors.red,
