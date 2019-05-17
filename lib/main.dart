@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'signinpage.dart';
 import 'social.dart';
-import 'timetable.dart';
+import 'pudding_calendar.dart';
 import 'goals.dart';
 import 'dashboard.dart';
 
