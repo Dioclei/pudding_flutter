@@ -10,6 +10,7 @@ import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/main.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 
+
 AppBar dashboardAppBar(context) {
   return AppBar(
     title: Text("Dashboard"),
@@ -31,6 +32,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView(
+        physics: BouncingScrollPhysics(),
         children: <Widget>[
           DashboardCard(
             title: 'Next Event',
@@ -125,9 +127,47 @@ class _DashboardState extends State<Dashboard> {
             title: 'New Invite',
             action: 'Accept/Decline',
             colors: [Colors.red[400], Colors.red[700]],
-            content: Container(),),
-          makeDashboardItem2("Goals", Icons.star),
-          makeDashboardItem3("NewInvite", Icons.alarm)
+            content: Row(
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 65,
+                      height: 65,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image:  AssetImage('icons/dason.jpeg'),
+                          fit: BoxFit.cover
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
+                      child: Text('Dason Yeo', style: TextStyle(color: Colors.white),),
+                    )
+                  ],
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text('Hey, just want to meet up for some homework and lunch. Are you free?', maxLines: 5, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+                Container(
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text('12:00 - 13:00', style: TextStyle(color: Colors.white),),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 75,
+          ),
         ],
       ),
     );
@@ -385,30 +425,6 @@ class GoalPostIt extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class CustomBoxShadow extends BoxShadow {
-  final BlurStyle blurStyle;
-
-  const CustomBoxShadow({
-    Color color = const Color(0xFF000000),
-    Offset offset = Offset.zero,
-    double blurRadius = 0.0,
-    this.blurStyle = BlurStyle.normal,
-  }) : super(color: color, offset: offset, blurRadius: blurRadius);
-
-  @override
-  Paint toPaint() {
-    final Paint result = Paint()
-      ..color = color
-      ..maskFilter = MaskFilter.blur(this.blurStyle, blurSigma);
-    assert(() {
-      if (debugDisableShadows)
-        result.maskFilter = null;
-      return true;
-    }());
-    return result;
   }
 }
 

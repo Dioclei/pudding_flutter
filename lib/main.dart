@@ -14,7 +14,7 @@ import 'package:unicorndial/unicorndial.dart';
 
 /// Set this to false if the initial sign in page is creating issues for you!
 /// Note that setting this to false will cause errors in the social functions.
-const bool signInEnabled = false;
+const bool signInEnabled = true;
 
 void main() {
   (signInEnabled)
@@ -23,11 +23,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: backgroundColor));
 }
 
-final ThemeData themeData = ThemeData(
-  fontFamily: 'Product Sans',
-  primarySwatch: Colors.brown,
-  canvasColor: Colors.yellow[100],
-);
+
 
 class MyApp extends StatelessWidget {
 
