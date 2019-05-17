@@ -22,6 +22,10 @@ class _CalendarState extends State<Calendar> {
       child: CalendarCarousel<Event>(
         onDayPressed: (DateTime date, List<Event> dates) {
           this.setState(() => _currentDate = date);
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Timetable()),
+          );
         },
         weekendTextStyle: TextStyle(
           color: Colors.red,
