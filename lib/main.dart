@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'themecolors.dart';
 import 'auth.dart';
 import 'signinpage.dart';
+import 'pudding_calendar.dart';
 import 'package:pudding_flutter/social/social.dart';
 import 'timetable.dart';
 import 'package:pudding_flutter/goals/goals.dart';
@@ -13,7 +14,7 @@ import 'package:unicorndial/unicorndial.dart';
 
 /// Set this to false if the initial sign in page is creating issues for you!
 /// Note that setting this to false will cause errors in the social functions.
-const bool signInEnabled = true;
+const bool signInEnabled = false;
 
 void main() {
   (signInEnabled)
@@ -21,6 +22,12 @@ void main() {
       : runApp(MyApp());
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: backgroundColor));
 }
+
+final ThemeData themeData = ThemeData(
+  fontFamily: 'Product Sans',
+  primarySwatch: Colors.brown,
+  canvasColor: Colors.yellow[100],
+);
 
 class MyApp extends StatelessWidget {
 
