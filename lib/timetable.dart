@@ -52,7 +52,7 @@ class Timetable extends StatelessWidget {
       appBar: AppBar(
         title: Text('SELECTED DATE HERE'),
       ),
-      body: Center(
+      body: Container(
         child:
           ListView(
             children: [
@@ -88,6 +88,7 @@ class Timetable extends StatelessWidget {
         child: Icon(Icons.add_alarm),
         backgroundColor: Colors.brown[600],
       ),
+      backgroundColor: Colors.yellow[50],
     );
   }
 }
