@@ -28,7 +28,7 @@ class PudCalendar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text('Index 1: Timetable'),
-          Calendar(),
+          NewCalendar(),
         ],
       ),
     );

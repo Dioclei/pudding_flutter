@@ -1,49 +1,53 @@
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel;
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
+import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:flutter/material.dart';
 import 'timetable.dart';
 
-class Calendar extends StatefulWidget {
-  Calendar({Key key,}) : super(key: key);
+void handleNewDate(date) {
+  print("handleNewDate ${date}");}
+
+class NewCalendar extends StatefulWidget {
+  NewCalendar({Key key,}) : super(key: key);
 
   @override
-  _CalendarState createState() => _CalendarState();
+  NewCalendarState createState() => NewCalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
-  DateTime _currentDate = DateTime.now();
-  EventList<Event> _markedDateMap;
+
+class NewCalendarState extends State<NewCalendar> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.0),
-      child: CalendarCarousel<Event>(
-        onDayPressed: (DateTime date, List<Event> dates) {
-          this.setState(() => _currentDate = date);
+        margin: EdgeInsets.symmetric(horizontal: 16.0),
+        child: new Calendar(
+          onDateSelected: (date)
+          {
+          handleNewDate(date);
           Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Timetable()),
+          context,
+          MaterialPageRoute(builder: (context) => Timetable()),
           );
-        },
-        weekendTextStyle: TextStyle(
-          color: Colors.red,
-        ),
-        thisMonthDayBorderColor: Colors.grey,
-//      weekDays: null, /// for pass null when you do not want to render weekDays
-//      headerText: Container( /// Example for rendering custom header
-//        child: Text('Custom Header'),
-//      ),
-//      markedDates: _markedDate,
-        weekFormat: false,
-        markedDatesMap: _markedDateMap,
-        height: 420.0,
-        selectedDateTime: _currentDate,
-        daysHaveCircularBorder: false,
+          }
+          
+          ,
 
-        /// null for not rendering any border, true for circular border, false for rectangular border
-      ),
+          isExpandable: true,
+          //this is to build the mon, sat, sun, those things on top
+          //dayBuilder: (BuildContext context, DateTime day) {
+          //  return new InkWell(
+            //  onTap: () => print("OnTap ${day}"),
+            //this is to build the container to change the calendar shape into boxes, in this case, with white border
+            //  child: new Container(
+             //   decoration: new BoxDecoration(
+              //      border: new Border.all(color: Colors.white)),
+               //this is to add the dates inside the calendar boxes
+               // child: new Text(
+                 // day.day.toString(),
+                //),
+            //  ),
+       //    );
+        //  },
+        )
     );
   }
 }

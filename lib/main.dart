@@ -18,12 +18,6 @@ void main() {
       : runApp(MyApp());
 }
 
-final ThemeData themeData = ThemeData(
-  fontFamily: 'Product Sans',
-  primarySwatch: Colors.brown,
-  canvasColor: Colors.yellow[100],
-);
-
 class MyApp extends StatelessWidget {
 
   @override
