@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "236856435968-4hl56vfos0simrpf1d91ecvlg2h5q649.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e.pudding_flutter",
+            "certificate_hash": "750041f1c5ffee12c8b7660e9db712bf211729c9"
+          }
+        },
+        {
+          "client_id": "236856435968-e7ob5sqmrj87j4oqduqe90shdvgat8ga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e.pudding_flutter",
+            "certificate_hash": "9a33df758cdf1d8425f9a8fb16a19d25d27f3a3e"
+          }
+        },
+        {
           "client_id": "236856435968-06m3lgljr7vmatjh24hv4vdsgblv9c0k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -33,20 +49,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "236856435968-rvic0dl56ptedr5gq12uv0hhgme0a2f2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }
