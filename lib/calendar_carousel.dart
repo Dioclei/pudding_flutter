@@ -5,9 +5,16 @@ import 'timetable.dart';
 void handleNewDate(date) {
   print("handleNewDate ${date}");}
 
-class NewCalendar extends StatefulWidget {
-  NewCalendar({Key key,}) : super(key: key);
+class Today {
+  final DateTime getdate;
 
+  //final String description;
+//if u wanna add 2 ver of ur var
+ // Today(this.getdate, this.description);
+  Today(this.getdate);
+}
+
+class NewCalendar extends StatefulWidget {
   @override
   NewCalendarState createState() => NewCalendarState();
 }
@@ -15,20 +22,24 @@ class NewCalendar extends StatefulWidget {
 
 class NewCalendarState extends State<NewCalendar> {
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 16.0),
         child: new Calendar(
+
           onDateSelected: (date)
           {
           handleNewDate(date);
+
           Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Timetable()),
+
+          MaterialPageRoute(builder: (context) => ParentWidget(today: date)),
           );
           }
-          
+
           ,
 
           isExpandable: true,
