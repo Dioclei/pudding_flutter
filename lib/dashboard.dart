@@ -53,7 +53,7 @@ class DashboardFloatingActionButton extends StatelessWidget {
             heroTag: 'goals',
             backgroundColor: backgroundColor,
             mini: true,
-            child: Icon(Icons.library_add, color: Colors.brown,),
+            child: Icon(Icons.outlined_flag, color: Colors.brown,),
             onPressed: () {
               parent.setState(() {
                 parent.selectedIndex = 2;
@@ -72,7 +72,7 @@ class DashboardFloatingActionButton extends StatelessWidget {
             heroTag: null,
             backgroundColor: backgroundColor,
             mini: true,
-            child: Icon(Icons.add_comment, color: Colors.brown,),
+            child: Icon(Icons.event, color: Colors.brown,),
             onPressed: () {
               parent.setState(() {
                 parent.selectedIndex = 1;

@@ -53,7 +53,7 @@ AppBar goalsAppBar(BuildContext context) {
 
 FloatingActionButton goalsFloatingActionButton(BuildContext context) {
   return FloatingActionButton(
-    child: Icon(Icons.library_add),
+    child: Icon(Icons.outlined_flag),
     elevation: 2.0,
     onPressed: () {
       addGoal(context);
