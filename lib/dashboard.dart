@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/main.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
-
+import 'package:pudding_flutter/themecolors.dart';
 
 AppBar dashboardAppBar(context) {
   return AppBar(
@@ -18,10 +18,82 @@ AppBar dashboardAppBar(context) {
   );
 }
 
-dashboardFloatingActionButton(context) {}
+class DashboardFloatingActionButton extends StatelessWidget {
+  final MyHomePageState parent;
+  final BuildContext context;
+  DashboardFloatingActionButton({@required this.parent, @required this.context});
+  @override
+  Widget build(BuildContext context) {
+    final List<UnicornButton> childButtons = [
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Friend",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: backgroundColor,
+            mini: true,
+            child: Icon(Icons.person_add, color: Colors.brown,),
+            onPressed: () {
+              parent.setState(() {
+                parent.selectedIndex = 3;
+              });
+            },
+          )
+      ),
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Goal",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: 'goals',
+            backgroundColor: backgroundColor,
+            mini: true,
+            child: Icon(Icons.library_add, color: Colors.brown,),
+            onPressed: () {
+              parent.setState(() {
+                parent.selectedIndex = 2;
+                addGoal(context);
+              });
+            },
+          )
+      ),
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Event",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: backgroundColor,
+            mini: true,
+            child: Icon(Icons.add_comment, color: Colors.brown,),
+            onPressed: () {
+              parent.setState(() {
+                parent.selectedIndex = 1;
+              });
+            },
+          )
+      ),
+    ];
+
+    return UnicornDialer(
+      backgroundColor: backgroundColor.withOpacity(0.9),
+      parentButtonBackground: Colors.brown,
+      orientation: UnicornOrientation.VERTICAL,
+      parentButton: Icon(Icons.add),
+      childButtons: childButtons,
+    );
+  }
+}
 
 class Dashboard extends StatefulWidget {
-  MyHomePageState parent;
+  final MyHomePageState parent;
   Dashboard(this.parent);
   @override
   _DashboardState createState() => _DashboardState();
@@ -39,45 +111,40 @@ class _DashboardState extends State<Dashboard> {
             action: 'Next Lesson in 5min',
             colors: [Colors.blue[400], Colors.blue[700]],
             content: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Physics Lecture',
-                              style: TextStyle(fontSize: 20, color: Colors.white),
-                            ),
-                            Text(
-                              'LT5',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text('8:30 - 9:30',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.white
-                              ),
-                            ),
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Physics Lecture',
+                            style: TextStyle(fontSize: 20, color: Colors.white),
                           ),
-                        )
-                      ],
-                    ),
-                  )
-
-                ],
-              ),
+                          Text(
+                            'LT5',
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            '8:30 - 9:30',
+                            style:
+                                TextStyle(fontSize: 16.0, color: Colors.white),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
           DashboardCard(
             title: 'Goals',
@@ -85,43 +152,53 @@ class _DashboardState extends State<Dashboard> {
             colors: [Colors.green[400], Colors.green[700]],
             onTap: () {
               print('Hello');
-              widget.parent.setState(() {widget.parent.selectedIndex = 2;});
+              widget.parent.setState(() {
+                widget.parent.selectedIndex = 2;
+              });
             },
             content: StreamBuilder(
-              stream: Firestore.instance.collection('goals').document(user.uid).collection('userGoals').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List goals = [];
-                  goals = snapshot.data.documents
-                      .map((doc) {
-                    return new Goal(
-                      id: doc.documentID,
-                      title: doc['title'],
-                      color: Color(doc['colorValue']),
-                      selectedPuddingIndex: doc['selectedPuddingIndex'],
-                    );
-                  }).toList();
-                  return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: goals.length,
-                      itemBuilder: (context, i) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: GoalPostIt(
-                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GoalPage(goal: goals[i]))),
-                                goal: goals[i]
-                            ),
-                          ),
-                        );
-                      }
+                stream: Firestore.instance
+                    .collection('goals')
+                    .document(user.uid)
+                    .collection('userGoals')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List goals = [];
+                    goals = snapshot.data.documents.map((doc) {
+                      return new Goal(
+                        id: doc.documentID,
+                        title: doc['title'],
+                        color: Color(doc['colorValue']),
+                        selectedPuddingIndex: doc['selectedPuddingIndex'],
                       );
-                } else return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            ),
+                    }).toList();
+                    return ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: goals.length,
+                        itemBuilder: (context, i) {
+                          return Center(
+                            child: GoalPostIt(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            GoalPage(goal: goals[i]))),
+                                goal: goals[i]),
+                          );
+                        },
+                        separatorBuilder: (context, i) {
+                          return Container(
+                            width: 16.0,
+                            color: Colors.transparent,
+                          );
+                        });
+                  } else
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                }),
           ),
           DashboardCard(
             title: 'New Invite',
@@ -139,27 +216,36 @@ class _DashboardState extends State<Dashboard> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image:  AssetImage('icons/dason.jpeg'),
-                          fit: BoxFit.cover
-                        ),
+                            image: AssetImage('icons/dason.jpeg'),
+                            fit: BoxFit.cover),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
-                      child: Text('Dason Yeo', style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        'Dason Yeo',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     )
                   ],
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text('Hey, just want to meet up for some homework and lunch. Are you free?', maxLines: 5, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)),
+                    child: Text(
+                        'Hey, just want to meet up for some homework and lunch. Are you free?',
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
                 Container(
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: Text('12:00 - 13:00', style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      '12:00 - 13:00',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -322,7 +408,12 @@ class DashboardCard extends StatelessWidget {
   final String action;
   final Function onTap;
 
-  DashboardCard({@required this.colors, @required this.title, @required this.action, @required this.content, this.onTap});
+  DashboardCard(
+      {@required this.colors,
+      @required this.title,
+      @required this.action,
+      @required this.content,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -349,17 +440,23 @@ class DashboardCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(title,
+                      Text(
+                        title,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-
                         ),
                       ),
                       Row(
                         children: <Widget>[
-                          Text(action, style: TextStyle(color: Colors.white),),
-                          Icon(Icons.keyboard_arrow_right, color: Colors.white,)
+                          Text(
+                            action,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_right,
+                            color: Colors.white,
+                          )
                         ],
                       ),
                     ],
@@ -390,7 +487,11 @@ class GoalPostIt extends StatelessWidget {
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            boxShadow: [BoxShadow(offset: Offset.fromDirection(pi/4, 1.0),)],
+            boxShadow: [
+              BoxShadow(
+                offset: Offset.fromDirection(pi / 4, 1.0),
+              )
+            ],
             borderRadius: BorderRadius.circular(15.0),
             color: Colors.pink[50],
           ),
@@ -409,12 +510,21 @@ class GoalPostIt extends StatelessWidget {
                     Container(
                       height: 50,
                       width: 50,
-                      child: Image(image: AssetImage('icons/pudding${goal.selectedPuddingIndex}.png')),
+                      child: Image(
+                          image: AssetImage(
+                              'icons/pudding${goal.selectedPuddingIndex}.png')),
                     ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 0),
-                        child: Center(child: Text(goal.title, maxLines: 2, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.0, color: Colors.brown),)),
+                        child: Center(
+                            child: Text(
+                          goal.title,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12.0, color: Colors.brown),
+                        )),
                       ),
                     ),
                   ],
@@ -423,9 +533,17 @@ class GoalPostIt extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+          top: 10,
+          right: 10,
+          child: Container(
+            height: 10,
+            width: 10,
+            decoration:
+            BoxDecoration(color: goal.color, shape: BoxShape.circle),
+          ),
+        ),
       ],
     );
   }
 }
-
-
