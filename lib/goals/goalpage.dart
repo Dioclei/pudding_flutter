@@ -81,7 +81,7 @@ class _GoalPageState extends State<GoalPage> {
             else Navigator.pop(context);
 
         }),
-        backgroundColor: widget.goal.color,
+        backgroundColor: Colors.brown,
         title: Text(widget.goal.title),
         actions: <Widget>[
           IconButton(
@@ -141,13 +141,10 @@ class _GoalPageState extends State<GoalPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(32.0),
-                child: Container(
-                  // TODO: APPEARANCE: Add a pudding indicator of time spent
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.red,
+                child: Image(
+                  image: AssetImage(
+                    'icons/pudding${widget.goal.selectedPuddingIndex}.png',
+                    //TODO: Animate Pudding
                   ),
                 ),
               ),
@@ -245,7 +242,6 @@ class _GoalPageState extends State<GoalPage> {
                                       onPressed: () {
                                         _timer.cancel();
                                         _displayedDuration = _initialDuration;
-                                        // TODO: terminate goal. DISCUSS: do we still add timestamp to database?
                                         setState(() => _buttonText = 'Start');
                                         Navigator.pop(context);
                                       },

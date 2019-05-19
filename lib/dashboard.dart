@@ -10,6 +10,7 @@ import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/main.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:pudding_flutter/themecolors.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 AppBar dashboardAppBar(context) {
   return AppBar(

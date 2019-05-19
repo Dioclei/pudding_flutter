@@ -9,7 +9,6 @@ import 'package:pudding_flutter/goals/goals.dart';
 import 'dashboard.dart';
 import 'package:pudding_flutter/pudding_calendar.dart';
 import 'package:flutter/services.dart';
-import 'package:unicorndial/unicorndial.dart';
 
 
 /// Set this to false if the initial sign in page is creating issues for you!
