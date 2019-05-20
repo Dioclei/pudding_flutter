@@ -477,31 +477,3 @@ class GoalPostIt extends StatelessWidget {
   }
 }
 
-class FriendRequestButton extends StatelessWidget {
-  final Widget child;
-  final Function onTap;
-  final Color color;
-  FriendRequestButton({@required this.onTap, @required this.child, this.color: Colors.transparent});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
-      ),
-      child: Material(
-        color: color,
-        borderRadius: BorderRadius.circular(10.0),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
-            child: child,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
