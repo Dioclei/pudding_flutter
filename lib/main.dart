@@ -74,10 +74,10 @@ class MyHomePageState extends State<MyHomePage> {
 
     /// Floating Action Buttons
     final _changingFAB = [
-      DashboardFloatingActionButton(parent: this, context: context),
+      DashboardFloatingActionButton(parent: this),
       calendarFloatingActionButton(context),
       goalsFloatingActionButton(context),
-      socialFloatingActionButton(context),
+      SocialFloatingActionButton(parent: this),
     ];
 
     return Scaffold(
