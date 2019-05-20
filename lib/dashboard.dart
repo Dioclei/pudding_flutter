@@ -10,7 +10,13 @@ import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/main.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:pudding_flutter/themecolors.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
+/// There are a few types of cards that can appear in the dashboard
+/// - Timetable (Next Event)
+/// - Goals (Manage Goals)
+/// - Invites: If there is only 1 invite, it will show the invite in full. If there is more than 1, it will say 'Manage invites'
+/// - Friend Requests: Each friend request is a card.
+/// It seems this is the best place to manage friend requests because it is quick.
 
 AppBar dashboardAppBar(context) {
   return AppBar(
@@ -21,8 +27,7 @@ AppBar dashboardAppBar(context) {
 
 class DashboardFloatingActionButton extends StatelessWidget {
   final MyHomePageState parent;
-  final BuildContext context;
-  DashboardFloatingActionButton({@required this.parent, @required this.context});
+  DashboardFloatingActionButton({@required this.parent});
   @override
   Widget build(BuildContext context) {
     final List<UnicornButton> childButtons = [
@@ -252,153 +257,73 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
           ),
+          DashboardCard(
+            title: 'New Friend Request',
+            action: 'View Profile/Decline'
+              ,
+            height: 110,
+            colors: [Colors.pink[400], Colors.pink[700]],
+            onTap: () => print('go to friend req'),
+            content: Row(
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage('icons/dason.jpeg'),
+                        fit: BoxFit.cover),
+                  ),
+                ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(3.5, 0, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(0.5),
+                        child: Text(
+                          'Dason Yeo',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(0.5),
+                        child: Text(
+                          '2018.dason.yeo@ejc.edu.sg',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+                OutlineButton(
+                  child: Text('Accept', style: TextStyle(color: Colors.white),),
+                  onPressed: () => print('accept'),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ],
+            )
+          ),
           Container(
             height: 75,
           ),
         ],
       ),
     );
-  }
-
-  makeDashboardItem1(String title, IconData icon) {
-    return Container(
-      height: 170,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [Colors.blue[300], Colors.blue[600]]),
-      ),
-      child: Container(),
-    );
-  }
-
-  Card makeDashboardItem2(String title, IconData icon) {
-    return Card(
-        elevation: 1.0,
-        margin: new EdgeInsets.all(8.0),
-        child: Container(
-          height: 170,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [Colors.deepOrange[300], Colors.deepOrange[600]]),
-          ),
-          child: new Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                print("Hi No2");
-              }, //action on tap
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    verticalDirection: VerticalDirection.down,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 40.0),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          icon,
-                          size: 40.0,
-                          color: Colors.orange,
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: new Text(title,
-                            style: new TextStyle(
-                                fontSize: 18.0, color: Colors.orange)),
-                      )
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    verticalDirection: VerticalDirection.down,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      SizedBox(height: 40.0),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.crop_square,
-                          size: 40.0,
-                          color: Colors.orange,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.crop_square,
-                          size: 40.0,
-                          color: Colors.orange,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.crop_square,
-                          size: 40.0,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
-
-  Card makeDashboardItem3(String title, IconData icon) {
-    return Card(
-        elevation: 1.0,
-        margin: new EdgeInsets.all(8.0),
-        child: Container(
-            height: 170,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.bottomLeft,
-                  end: Alignment.topRight,
-                  colors: [Colors.red[300], Colors.red[600]]),
-            ),
-            child: new Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  print("Hi No3");
-                }, //action on tap
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 10.0),
-                    new Text(title,
-                        style:
-                            new TextStyle(fontSize: 18.0, color: Colors.red)),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      verticalDirection: VerticalDirection.down,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(height: 40.0),
-                        Icon(
-                          icon,
-                          size: 40.0,
-                          color: Colors.red,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            )));
   }
 }
 
@@ -408,20 +333,23 @@ class DashboardCard extends StatelessWidget {
   final String title;
   final String action;
   final Function onTap;
+  final double height;
 
   DashboardCard(
       {@required this.colors,
       @required this.title,
       @required this.action,
       @required this.content,
-      this.onTap});
+      this.onTap,
+      this.height: 170,
+      });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 170,
+        height: height,
         decoration: BoxDecoration(
           boxShadow: [BoxShadow(blurRadius: 1.0)],
           borderRadius: BorderRadius.circular(10.0),
@@ -548,3 +476,32 @@ class GoalPostIt extends StatelessWidget {
     );
   }
 }
+
+class FriendRequestButton extends StatelessWidget {
+  final Widget child;
+  final Function onTap;
+  final Color color;
+  FriendRequestButton({@required this.onTap, @required this.child, this.color: Colors.transparent});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
+      ),
+      child: Material(
+        color: color,
+        borderRadius: BorderRadius.circular(10.0),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
