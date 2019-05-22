@@ -45,6 +45,7 @@ class DashboardFloatingActionButton extends StatelessWidget {
             onPressed: () {
               parent.setState(() {
                 parent.selectedIndex = 3;
+                showSearch(context: context, delegate: SocialSearchDelegate());
               });
             },
           )
