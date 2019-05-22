@@ -103,7 +103,7 @@ class _InvitesCardState extends State<InvitesCard> {
                 height = 100.0;
               });
           },
-          child: ,
+          child: Container(),
         ),
       ),
     );

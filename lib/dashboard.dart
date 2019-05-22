@@ -476,4 +476,3 @@ class GoalPostIt extends StatelessWidget {
     );
   }
 }
-

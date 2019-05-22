@@ -180,7 +180,7 @@ class SocialSearchDelegate extends SearchDelegate {
                             final photoUrl = snapshot.data.documents[n]['photoUrl'];
                             final nickname = snapshot.data.documents[n]['nickname'];
                             final email = snapshot.data.documents[n]['email'];
-                            final bio = snapshot.data.documents[n]['bio'].putIfAbsent('No bio set');
+                            final bio = snapshot.data.documents[n]['bio'];
                             final uid = snapshot.data.documents[n].documentID;
                             return (user.email !=
                                     snapshot.data.documents[n]['email'])
@@ -193,7 +193,7 @@ class SocialSearchDelegate extends SearchDelegate {
                                   photoUrl: photoUrl,
                                   nickname: nickname,
                                   uid: uid,
-                                  bio: bio,
+                                  bio: (bio != null) ? bio : 'No bio set',
                                   email: email,
                                 ),
                               )),
@@ -217,7 +217,7 @@ class SocialSearchDelegate extends SearchDelegate {
                             final photoUrl = snapshot.data.documents[n]['photoUrl'];
                             final nickname = snapshot.data.documents[n]['nickname'];
                             final email = snapshot.data.documents[n]['email'];
-                            final bio = snapshot.data.documents[n]['bio'].putIfAbsent('No bio set');
+                            final bio = snapshot.data.documents[n]['bio'];
                             final uid = snapshot.data.documents[n].documentID;
                             return (user.email !=
                                     snapshot.data.documents[n]['email'])
@@ -230,7 +230,7 @@ class SocialSearchDelegate extends SearchDelegate {
                                         photoUrl: photoUrl,
                                         nickname: nickname,
                                         uid: uid,
-                                        bio: bio,
+                                        bio: (bio != null) ? bio : 'No bio set',
                                         email: email,
                                       ),
                                     )),
