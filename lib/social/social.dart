@@ -7,6 +7,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:pudding_flutter/main.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:pudding_flutter/social/invites.dart';
+import 'package:pudding_flutter/social/personalprofilepage.dart';
 
 /// SOCIAL
 /// Data Structure
@@ -51,16 +52,22 @@ AppBar socialAppBar(BuildContext context) {
                   ).show(context);
                 });
                 break;
+              case 1: Navigator.push(context, MaterialPageRoute(builder: (context) => PersonalProfilePage()));
+                break;
               default:
                 throw (Exception("invalid value!"));
             }
           },
           itemBuilder: (context) => <PopupMenuEntry>[
-                const PopupMenuItem(
-                  value: 0,
-                  child: Text('Switch accounts'),
-                )
-              ]),
+            const PopupMenuItem(
+              value: 0,
+              child: Text('Switch accounts'),
+            ),
+            const PopupMenuItem(
+              value: 1,
+              child: Text('Manage profile'),
+            )
+          ]),
     ],
   );
 }
