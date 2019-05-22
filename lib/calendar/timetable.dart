@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'event_creator.dart';
 
 AppBar timetableAppBar(BuildContext context) {
   return AppBar(
@@ -23,7 +24,12 @@ class Timetable extends StatelessWidget {
             color: Colors.grey[400],
           ),
           RaisedButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EventCreator())
+              );
+            },
             textColor: Colors.white,
             padding: const EdgeInsets.all(0.0),
             child: Container(
@@ -88,7 +94,7 @@ class Timetable extends StatelessWidget {
         child: Icon(Icons.add_alarm),
         backgroundColor: Colors.brown[600],
       ),
-      backgroundColor: Colors.yellow[50],
+      backgroundColor: Colors.yellow[100],
     );
   }
 }
