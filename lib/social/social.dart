@@ -26,6 +26,13 @@ import 'package:pudding_flutter/social/personalprofilepage.dart';
 AppBar socialAppBar(BuildContext context) {
   return AppBar(
     title: Text("Social"),
+    bottom: TabBar(
+      isScrollable: false,
+        tabs: [
+      Tab(child: Text('Meetups', textAlign: TextAlign.center,),),
+      Tab(child: Text('Invites', textAlign: TextAlign.center,),),
+      Tab(child: Text('Friend Requests', textAlign: TextAlign.center,),),
+    ]),
     actions: <Widget>[
       IconButton(
           icon: Icon(Icons.search),
@@ -270,93 +277,52 @@ class SocialSearchDelegate extends SearchDelegate {
 }
 
 class Social extends StatelessWidget {
+  final initialIndex;
+  Social({this.initialIndex: 0});
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: auth.onAuthStateChanged,
-        builder: (context, userSnapshot) {
-          if (userSnapshot.hasData) {
-            return Container(
-              color: backgroundColor,
-              child: Column(
-                children: <Widget>[
-                  StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('users')
-                          .document(userSnapshot.data.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        return (snapshot.hasData)
-                            ? Row(
-                                children: <Widget>[
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CircleImage(
-                                        photoUrl: snapshot.data['photoUrl'],
-                                        size: 70,
-                                      )),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data['nickname'],
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          snapshot.data['bio'],
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Container();
-                      }),
-                  Divider(),
-                  FriendRequests(),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Meetups",
-                          style: TextStyle(
-                            fontSize: 24.0,
-                          ),
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            child: Text("No meetups yet. Schedule one?"),
-                            onTap: () {
-                              print("Scheduling meetup!");
-                            }, //TODO: Meetup scheduler
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        });
+    return DefaultTabController(
+      initialIndex: initialIndex,
+      length: 3,
+      child: Scaffold(
+        appBar: socialAppBar(context),
+        body: TabBarView(
+          children: <Widget>[
+            Meetups(),
+            InvitesPage(),
+            FriendRequests(),
+          ],
+        ),
+      ),
+    );
   }
 }
+
+class Meetups extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Meetups",
+          style: TextStyle(
+            fontSize: 24.0,
+          ),
+        ),
+        Center(
+          child: GestureDetector(
+            child: Text("No meetups yet. Schedule one?"),
+            onTap: () {
+              print("Scheduling meetup!");
+            }, //TODO: Meetup scheduler
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
 
 class FriendRequests extends StatelessWidget {
   @override

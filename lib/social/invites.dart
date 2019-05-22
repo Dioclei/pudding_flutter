@@ -11,42 +11,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// - invited (List<String>, the uids of the invited)
 /// - message (String)
 
-AppBar invitesAppBar() {
-  return AppBar(
-    title: Text('Invites'),
-  );
-}
-
 class InvitesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: invitesAppBar(),
-      body: StreamBuilder(
-        stream: Firestore.instance.collection('users').document(user.uid).collection('invites').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Invite> invitesList = snapshot.data.documents
-                .map((doc) {
-              return new Invite(
-                startTime: DateTime.parse(doc['startTime']),
-                endTime: DateTime.parse(doc['endTime']),
-                inviterUid: doc['inviter'],
-                invitedUid: doc['invited'],
-                message: doc['message'],
-              );
-            }).toList();
-            return ListView.builder(
-              itemCount: invitesList.length,
-              itemBuilder: (context, i) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InvitesCard(invite: invitesList[i], selected: (invitesList.length == 1),
-                ),
-              ),
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').document(user.uid).collection('invites').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<Invite> invitesList = snapshot.data.documents
+              .map((doc) {
+            return new Invite(
+              startTime: DateTime.parse(doc['startTime']),
+              endTime: DateTime.parse(doc['endTime']),
+              inviterUid: doc['inviter'],
+              invitedUid: doc['invited'],
+              message: doc['message'],
             );
-          } else return CircularProgressIndicator();
-        }
-      ),
+          }).toList();
+          return ListView.builder(
+            itemCount: invitesList.length,
+            itemBuilder: (context, i) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InvitesCard(invite: invitesList[i], selected: (invitesList.length == 1),
+              ),
+            ),
+          );
+        } else return CircularProgressIndicator();
+      }
     );
   }
 }

@@ -69,7 +69,7 @@ class MyHomePageState extends State<MyHomePage> {
       dashboardAppBar(context),
       calendarAppBar(context),
       goalsAppBar(context),
-      socialAppBar(context),
+      null,
     ];
 
     /// Floating Action Buttons
