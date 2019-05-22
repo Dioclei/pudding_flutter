@@ -26,10 +26,15 @@ class ParentWidget extends StatefulWidget {
 
 class _ParentWidgetState extends State<ParentWidget> {
   bool _active = false;
-
+  bool _taps = false;
   void _handleTapboxChanged(bool newValue) {
     setState(() {
       _active = newValue;
+    });
+  }
+  void _handleTaps(bool newValue) {
+    setState(() {
+      _taps = newValue;
     });
   }
 
@@ -37,6 +42,8 @@ class _ParentWidgetState extends State<ParentWidget> {
   Widget build(BuildContext context) {
     return Container(
       child: Timetable(
+        ontaps: _handleTaps,
+        taps: _taps,
         tooday: widget.today,
         active: _active,
         onChanged: _handleTapboxChanged,
@@ -48,12 +55,17 @@ class _ParentWidgetState extends State<ParentWidget> {
 class Timetable extends StatelessWidget {
   final bool active;
   final ValueChanged<bool> onChanged;
-  Timetable({Key key,this.active: false, @required this.tooday, this.onChanged}) : super(key: key);
+  final bool taps;
+  final ValueChanged<bool> ontaps;
+  Timetable({Key key,this.active: false, this.taps : false, @required this.tooday, this.onChanged, this.ontaps}) : super(key: key);
   DateTime tooday;
   /* The _card function is to generate individual card widgets for the list
   * view without overcrowding the ListView with repetitive code*/
   void _handleTap() {
     onChanged(!active);
+  }
+  void _handleSecondTap(){
+    ontaps(!taps);
   }
   Widget _card(context,label){
 
@@ -80,7 +92,17 @@ class Timetable extends StatelessWidget {
 
           child: InkWell(
 
-            onTap: (){_handleTap();
+            onTap: (){
+              if(taps == true){
+                _handleTap();
+                //_handleSecondTap(); somewhere somehow _handleSecondTap() needs to be false after u tap
+                print("HIYA");
+                //replace this with push to the add event page
+              }
+              else{
+              _handleTap();
+              _handleSecondTap();
+              }
             },
             onDoubleTap: (){
 
