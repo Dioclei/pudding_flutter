@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'themecolors.dart';
 import 'auth.dart';
 import 'signinpage.dart';
-import 'pudding_calendar.dart';
+import 'package:pudding_flutter/calendar/pudding_calendar.dart';
 import 'package:pudding_flutter/social/social.dart';
-import 'timetable.dart';
 import 'package:pudding_flutter/goals/goals.dart';
 import 'dashboard.dart';
 
