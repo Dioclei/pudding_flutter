@@ -110,7 +110,7 @@ class _PersonalProfilePageBodyState extends State<PersonalProfilePageBody> {
             children: <Widget>[
               InkWell(
                 onTap: () {
-                  return showModalBottomSheet(context: context, builder: (context) {
+                  return showModalBottomSheet(context: context, builder: (context) { //TODO STRANGE BUG: modalbottomsheet doesn't resize to the keyboard so it overflows.
                     return Container(
                       height: 120,
                       color: backgroundColor,
