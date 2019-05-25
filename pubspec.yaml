@@ -34,6 +34,7 @@ dependencies:
   charts_flutter: ^0.6.0
   numberpicker: ^1.0.0
   flushbar: ^1.4.0
+  unicorndial: ^1.1.5
 
 dev_dependencies:
   flutter_test:
@@ -57,11 +58,13 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
   - icons/default_pudding.png
+  - icons/default_pudding1.png
   - icons/pudding0.png
   - icons/pudding1.png
   - icons/pudding2.png
   - icons/pudding3.png
-  
+  - icons/dason.jpeg
+
   # adding fonts
   fonts: 
   - family : Product Sans

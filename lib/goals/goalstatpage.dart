@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pudding_flutter/goals/barchart.dart';
 import 'package:pudding_flutter/auth.dart';
 import 'package:pudding_flutter/goals/dateparser.dart';
+import 'package:pudding_flutter/themecolors.dart';
 
 class GoalStatPage extends StatelessWidget {
   final Goal goal;
@@ -13,11 +14,11 @@ class GoalStatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: goal.color,
-          title: Text('Stats'),
+          backgroundColor: Colors.brown,
+          title: Text('${goal.title} Stats'),
           bottom: TabBar(
             indicatorColor: Colors.white,
             tabs: <Widget>[
@@ -42,8 +43,11 @@ class MonthTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MonthChart(
-        data: [0,0,0,0,0,0,1,2,333,23,400,102,167,256,302,40,10,0,0,0,0]
+    return Container(
+      color: backgroundColor,
+      child: MonthChart(
+          data: [0,0,0,0,0,0,1,2,333,23,400,102,167,256,302,40,10,0,0,0,0]
+      ),
     );
   }
 }
@@ -92,57 +96,60 @@ class _WeekTabState extends State<WeekTab> {
   Widget build(BuildContext context) {
     String displayedWeekNumber = currentWeekIdentifier.split('-')[1];//;
     String displayedYearNumber = currentWeekIdentifier.split('-')[0];//;
-    return Column(
-      children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(icon: Icon(Icons.chevron_left, color: Colors.white,), onPressed: () => setState(() => currentWeekIdentifier = decrementWeekIdentifier(currentWeekIdentifier)),),
-            Text('Week $displayedWeekNumber of Year $displayedYearNumber', style: TextStyle(color: Colors.white),),
-            IconButton(icon: Icon(Icons.chevron_right, color: Colors.white,), onPressed: () => setState(() => currentWeekIdentifier = incrementWeekIdentifier(currentWeekIdentifier)),),
-          ],
-        ),
-        StreamBuilder(
-            stream: Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(widget.goal.id).collection('events').snapshots(),
-            builder: (context, snapshot) {
-              Map<String, Map<DateTime, int>> dataMap = {};
-              if (snapshot.hasData) {
-                snapshot.data.documents.map((doc) {
-                  final DateTime date = DateTime.parse(doc['completedDate']);
-                  final DateTime completedDate = DateTime(date.year, date.month, date.day); //clean up the date (no time data)
-                  final String weekIdentifier = getYearWeekString(completedDate); //String looks like this: YYYY-(INT)
-                  if (dataMap[weekIdentifier] == null) //checks whether there is any date data inside that specific week
-                    dataMap[weekIdentifier] = {completedDate: doc['durationInMinutes']};
-                  else if (dataMap[weekIdentifier][completedDate] == null) { //checks whether the actual date itself has any data
-                    dataMap[weekIdentifier][completedDate] = doc['durationInMinutes'];
-                  } else
-                    dataMap[weekIdentifier][completedDate] += doc['durationInMinutes'];
-                }).toList();
-                print(dataMap);
-                if (dataMap[currentWeekIdentifier] != null) {
-                  List weekData = [0, 0, 0, 0, 0, 0, 0,];
-                  dataMap[currentWeekIdentifier].keys.forEach((DateTime date) {
-                    weekData[date.weekday - 1] = dataMap[currentWeekIdentifier][date];
-                  });
-                  return Expanded(
-                    child: WeekChart(
-                      mon: weekData[0],
-                      tue: weekData[1],
-                      wed: weekData[2],
-                      thu: weekData[3],
-                      fri: weekData[4],
-                      sat: weekData[5],
-                      sun: weekData[6],
-                    ),
+    return Container(
+      color: backgroundColor,
+      child: Column(
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(icon: Icon(Icons.chevron_left, color: Colors.brown,), onPressed: () => setState(() => currentWeekIdentifier = decrementWeekIdentifier(currentWeekIdentifier)),),
+              Text('Week $displayedWeekNumber of Year $displayedYearNumber', style: TextStyle(color: Colors.brown),),
+              IconButton(icon: Icon(Icons.chevron_right, color: Colors.brown,), onPressed: () => setState(() => currentWeekIdentifier = incrementWeekIdentifier(currentWeekIdentifier)),),
+            ],
+          ),
+          StreamBuilder(
+              stream: Firestore.instance.collection('goals').document(user.uid).collection('userGoals').document(widget.goal.id).collection('events').snapshots(),
+              builder: (context, snapshot) {
+                Map<String, Map<DateTime, int>> dataMap = {};
+                if (snapshot.hasData) {
+                  snapshot.data.documents.map((doc) {
+                    final DateTime date = DateTime.parse(doc['completedDate']);
+                    final DateTime completedDate = DateTime(date.year, date.month, date.day); //clean up the date (no time data)
+                    final String weekIdentifier = getYearWeekString(completedDate); //String looks like this: YYYY-(INT)
+                    if (dataMap[weekIdentifier] == null) //checks whether there is any date data inside that specific week
+                      dataMap[weekIdentifier] = {completedDate: doc['durationInMinutes']};
+                    else if (dataMap[weekIdentifier][completedDate] == null) { //checks whether the actual date itself has any data
+                      dataMap[weekIdentifier][completedDate] = doc['durationInMinutes'];
+                    } else
+                      dataMap[weekIdentifier][completedDate] += doc['durationInMinutes'];
+                  }).toList();
+                  print(dataMap);
+                  if (dataMap[currentWeekIdentifier] != null) {
+                    List weekData = [0, 0, 0, 0, 0, 0, 0,];
+                    dataMap[currentWeekIdentifier].keys.forEach((DateTime date) {
+                      weekData[date.weekday - 1] = dataMap[currentWeekIdentifier][date];
+                    });
+                    return Expanded(
+                      child: WeekChart(
+                        mon: weekData[0],
+                        tue: weekData[1],
+                        wed: weekData[2],
+                        thu: weekData[3],
+                        fri: weekData[4],
+                        sat: weekData[5],
+                        sun: weekData[6],
+                      ),
+                    );
+                  } else return Expanded(
+                    child: WeekChart(), //empty bar chart
                   );
-                } else return Expanded(
-                  child: WeekChart(), //empty bar chart
-                );
-              } else return Center(child: CircularProgressIndicator());
-            }
-        ),
-      ],
+                } else return Center(child: CircularProgressIndicator());
+              }
+          ),
+        ],
+      ),
     );
   }
 }
