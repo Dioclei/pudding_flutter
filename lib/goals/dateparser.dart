@@ -51,3 +51,21 @@ int weekNumber(DateTime date) {
   int ordinal = int.parse(DateFormat("D").format(date));
   return ((ordinal - date.weekday + 10) / 7).floor();
 }
+
+String getMonthDay (DateTime date) {
+  List<String> months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  return '${months[date.month - 1]} ${date.day}';
+}
