@@ -33,8 +33,6 @@ dependencies:
   flutter_auth_buttons: ^0.3.1
   charts_flutter: ^0.6.0
   numberpicker: ^1.0.0
-  flutter_calendar: ^0.0.1
-  intl: 0.15.7
   flushbar: ^1.4.0
   unicorndial: ^1.1.5
 
