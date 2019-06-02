@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'calendar_carousel.dart';
 
-
 AppBar calendarAppBar(BuildContext context) {
   return AppBar(
     title: Text('Calendar'),
@@ -18,7 +17,6 @@ FloatingActionButton calendarFloatingActionButton(BuildContext context) {
   );
 }
 
-
 class PudCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,3 @@ class PudCalendar extends StatelessWidget {
     );
   }
 }
-
-
-
-

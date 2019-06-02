@@ -120,7 +120,6 @@ class Timetable extends StatelessWidget {
                 //textColor: Colors.white,
                 //padding: const EdgeInsets.all(0.0),
 
-
                 /*
                   TODO: Forcefully merged this part. Not sure if still needed.
                   RaisedButton(
