@@ -5,6 +5,7 @@ import 'package:pudding_flutter/goals/goalcreationpage.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:pudding_flutter/goals/goalarchivepage.dart';
+import 'package:pudding_flutter/themecolors.dart';
 
 /// GOALS
 /// Data Structure
@@ -20,29 +21,10 @@ import 'package:pudding_flutter/goals/goalarchivepage.dart';
 ///             durationInMinutes: int
 ///             completedDate: DateTime.now().toIso8601String()
 
-
-enum Layout {
-  list,
-  grid,
-}
-
-Layout currentLayout = Layout.list;
-
 AppBar goalsAppBar(BuildContext context) {
   return AppBar(
     title: Text('Goals'),
     actions: <Widget>[
-      IconButton(
-        icon: (currentLayout == Layout.list)
-            ? Icon(
-                Icons.apps,
-              )
-            : Icon(
-                Icons.list,
-              ),
-        onPressed: () =>
-            print('Change layout'), //TODO: Change layout with stateful widget.
-      ),
       IconButton(
         icon: Icon(Icons.unarchive),
         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GoalArchivePage())),
@@ -53,15 +35,19 @@ AppBar goalsAppBar(BuildContext context) {
 
 FloatingActionButton goalsFloatingActionButton(BuildContext context) {
   return FloatingActionButton(
-    child: Icon(Icons.library_add),
+    child: Icon(Icons.outlined_flag),
     elevation: 2.0,
     onPressed: () {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return GoalCreationPage();
-        },
-      );
+      addGoal(context);
+    },
+  );
+}
+
+addGoal(context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return GoalCreationPage();
     },
   );
 }
@@ -95,8 +81,6 @@ class _GoalsState extends State<Goals> {
                 })
                 .toList();
             if (goalList.length != 0) {
-              switch (currentLayout) {
-                case Layout.list:
                   return ListView.builder(
                       itemCount: goalList.length,
                       itemBuilder: (context, i) {
@@ -105,6 +89,7 @@ class _GoalsState extends State<Goals> {
                           key: Key(currentGoal.id),
                           child: GoalsCard(
                             goal: currentGoal,
+                            onTap: () => Navigator.push(context, new MaterialPageRoute(builder: (context) => GoalPage(goal: currentGoal)))
                           ),
                           direction: DismissDirection.endToStart,
                           background:  Container(
@@ -167,18 +152,11 @@ class _GoalsState extends State<Goals> {
                               ).show(overallContext);
                             });
                           },
+                          onResize: () {
+
+                          },
                         );
                       });
-                case Layout.grid:
-                  return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200.0),
-                      itemBuilder: (context, i) {
-                        return GoalsCard(
-                          goal: goalList[i],
-                        );
-                      }); //TODO: Implement GridView goals
-              }
             } else
               return Center(
                 child: Text("It's feeling empty in here... Add a new goal!"),
@@ -205,21 +183,38 @@ class Goal {
 
 class GoalsCard extends StatelessWidget {
   final Goal goal;
+  final Function onTap;
 
-  GoalsCard({@required this.goal});
+  GoalsCard({@required this.goal, @required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.push(context, new MaterialPageRoute(builder: (context) => GoalPage(goal: goal))),
-      child: Card(
-        child: Container(
-          height: 100.0,
-          color: goal.color,
-          child: ListTile(
-            leading: Icon(Icons.library_music),
-            title: Text(goal.title),
-            subtitle: Text('Selected Index: ${goal.selectedPuddingIndex}'),
+    return Container(
+      height: 100.0,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(1.0, 2.0, 1.0, 2.0),
+        child: Material(
+          elevation: 1.0,
+          color: backgroundColor,
+          child: InkWell(
+            onTap: onTap,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 10.0,
+                  color: goal.color,
+                ),
+                Image(image: AssetImage('icons/pudding${goal.selectedPuddingIndex}.png'),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(goal.title, style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text('Time Spent')
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

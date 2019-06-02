@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pudding_flutter/social/social.dart';
+import 'package:flutter/material.dart';
 import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/social/social.dart';
 import 'package:pudding_flutter/themecolors.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -9,15 +9,15 @@ class ProfilePage extends StatelessWidget {
   final String photoUrl;
   final String nickname;
   final String email;
+  final String bio;
   ProfilePage(
       {@required this.photoUrl,
       @required this.nickname,
       @required this.uid,
-      @required this.email});
+      @required this.email,
+      @required this.bio});
   @override
   Widget build(BuildContext context) {
-    final DocumentReference users =
-        Firestore.instance.collection('users').document(uid);
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -47,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                         child: Text(
                           'Name',
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: Colors.brown,
                           ),
                         ),
                       ),
@@ -73,7 +73,7 @@ class ProfilePage extends StatelessWidget {
                         child: Text(
                           'Email',
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: Colors.brown,
                           ),
                         ),
                       ),
@@ -87,39 +87,33 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 Divider(),
-                StreamBuilder(
-                    stream: users.snapshots(),
-                    builder: (context, snapshot) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 1.0,
-                              ),
-                              child: Text(
-                                'Bio',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                            (snapshot.hasData)
-                                ? Text(
-                                    snapshot.data['bio'],
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                    maxLines: 5,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                : CircularProgressIndicator(),
-                          ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 1.0,
                         ),
-                      );
-                    }),
+                        child: Text(
+                          'Bio',
+                          style: TextStyle(
+                            color: Colors.brown,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        bio,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ],

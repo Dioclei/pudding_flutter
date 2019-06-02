@@ -10,7 +10,7 @@ AppBar calendarAppBar(BuildContext context) {
 
 FloatingActionButton calendarFloatingActionButton(BuildContext context) {
   return FloatingActionButton(
-    child: Icon(Icons.add_comment),
+    child: Icon(Icons.event),
     elevation: 2.0,
     onPressed: () {
       print("Timetable Action Button pressed!");

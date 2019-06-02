@@ -4,6 +4,10 @@ import 'package:pudding_flutter/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pudding_flutter/social/profilepage.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:pudding_flutter/main.dart';
+import 'package:unicorndial/unicorndial.dart';
+import 'package:pudding_flutter/social/invites.dart';
+import 'package:pudding_flutter/social/personalprofilepage.dart';
 
 /// SOCIAL
 /// Data Structure
@@ -22,6 +26,13 @@ import 'package:flushbar/flushbar.dart';
 AppBar socialAppBar(BuildContext context) {
   return AppBar(
     title: Text("Social"),
+    bottom: TabBar(
+      isScrollable: false,
+        tabs: [
+      Tab(child: Text('Meetups', textAlign: TextAlign.center,),),
+      Tab(child: Text('Invites', textAlign: TextAlign.center,),),
+      Tab(child: Text('Friend Requests', textAlign: TextAlign.center,),),
+    ]),
     actions: <Widget>[
       IconButton(
           icon: Icon(Icons.search),
@@ -38,34 +49,105 @@ AppBar socialAppBar(BuildContext context) {
               case 0:
                 switchAccounts().then((user) {
                   Flushbar(
-                    message: 'Successfully switched accounts as ${user.displayName}!',
-                    icon: Icon(Icons.check, color: Colors.white,),
+                    message:
+                        'Successfully switched accounts as ${user.displayName}!',
+                    icon: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
                     duration: Duration(seconds: 3),
                   ).show(context);
                 });
+                break;
+              case 1: Navigator.push(context, MaterialPageRoute(builder: (context) => PersonalProfilePage()));
                 break;
               default:
                 throw (Exception("invalid value!"));
             }
           },
           itemBuilder: (context) => <PopupMenuEntry>[
-                const PopupMenuItem(
-                  value: 0,
-                  child: Text('Switch accounts'),
-                )
-              ]),
+            const PopupMenuItem(
+              value: 0,
+              child: Text('Switch accounts'),
+            ),
+            const PopupMenuItem(
+              value: 1,
+              child: Text('Manage profile'),
+            )
+          ]),
     ],
   );
 }
 
-FloatingActionButton socialFloatingActionButton(BuildContext context) {
-  return FloatingActionButton(
-    child: Icon(Icons.person_add),
-    elevation: 2.0,
-    onPressed: () {
-      showFriendList(context);
-    },
-  );
+class SocialFloatingActionButton extends StatelessWidget {
+  final MyHomePageState parent;
+  SocialFloatingActionButton({this.parent});
+  @override
+  Widget build(BuildContext context) {
+    print(DateTime(2019, 2, 1, 12, 30).toIso8601String());
+    print(DateTime(2019, 2, 1, 12, 50).toIso8601String());
+    final List<UnicornButton> childButtons = [
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Manage Invites",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: backgroundColor,
+            mini: true,
+            child: Icon(
+              Icons.notifications,
+              color: Colors.brown,
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => InvitesPage()));
+            },
+          )),
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Add Friend",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: backgroundColor,
+            mini: true,
+            child: Icon(
+              Icons.person_add,
+              color: Colors.brown,
+            ),
+            onPressed: () {
+              showSearch(context: context, delegate: SocialSearchDelegate());
+            },
+          )),
+      UnicornButton(
+          hasLabel: true,
+          labelText: "Create Meetup",
+          labelBackgroundColor: Colors.transparent,
+          labelHasShadow: false,
+          labelColor: Colors.brown,
+          currentButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: backgroundColor,
+            mini: true,
+            child: Icon(
+              Icons.group_add,
+              color: Colors.brown,
+            ),
+            onPressed: () {},
+          )),
+    ];
+    return UnicornDialer(
+      backgroundColor: backgroundColor.withOpacity(0.9),
+      parentButtonBackground: Colors.brown,
+      orientation: UnicornOrientation.VERTICAL,
+      parentButton: Icon(Icons.person_outline),
+      childButtons: childButtons,
+    );
+  }
 }
 
 class SocialSearchDelegate extends SearchDelegate {
@@ -98,7 +180,7 @@ class SocialSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return Container(
-      color: backgroundColor,
+        color: backgroundColor,
         child: (query.contains('@') &&
                 query.contains('.')) //check whether it's an email
             ? StreamBuilder(
@@ -111,15 +193,27 @@ class SocialSearchDelegate extends SearchDelegate {
                       ? ListView.builder(
                           itemCount: snapshot.data.documents.length,
                           itemBuilder: (context, n) {
+                            final photoUrl = snapshot.data.documents[n]['photoUrl'];
+                            final nickname = snapshot.data.documents[n]['nickname'];
+                            final email = snapshot.data.documents[n]['email'];
+                            final bio = snapshot.data.documents[n]['bio'];
+                            final uid = snapshot.data.documents[n].documentID;
                             return (user.email !=
                                     snapshot.data.documents[n]['email'])
                                 ? SocialCard(
-                                    photoUrl: snapshot.data.documents[n]
-                                        ['photoUrl'],
-                                    nickname: snapshot.data.documents[n]
-                                        ['nickname'],
-                                    email: snapshot.data.documents[n]['email'],
-                                    uid: snapshot.data.documents[n].documentID)
+                              photoUrl: photoUrl,
+                              title: nickname,
+                              subtitle: email,
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfilePage(
+                                  photoUrl: photoUrl,
+                                  nickname: nickname,
+                                  uid: uid,
+                                  bio: (bio != null) ? bio : 'No bio set',
+                                  email: email,
+                                ),
+                              )),
+                            )
                                 : Container();
                           },
                         )
@@ -136,15 +230,26 @@ class SocialSearchDelegate extends SearchDelegate {
                       ? ListView.builder(
                           itemCount: snapshot.data.documents.length,
                           itemBuilder: (context, n) {
+                            final photoUrl = snapshot.data.documents[n]['photoUrl'];
+                            final nickname = snapshot.data.documents[n]['nickname'];
+                            final email = snapshot.data.documents[n]['email'];
+                            final bio = snapshot.data.documents[n]['bio'];
+                            final uid = snapshot.data.documents[n].documentID;
                             return (user.email !=
                                     snapshot.data.documents[n]['email'])
                                 ? SocialCard(
-                                    photoUrl: snapshot.data.documents[n]
-                                        ['photoUrl'],
-                                    nickname: snapshot.data.documents[n]
-                                        ['nickname'],
-                                    email: snapshot.data.documents[n]['email'],
-                                    uid: snapshot.data.documents[n].documentID,
+                                    photoUrl: photoUrl,
+                                    title: nickname,
+                                    subtitle: email,
+                                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ProfilePage(
+                                        photoUrl: photoUrl,
+                                        nickname: nickname,
+                                        uid: uid,
+                                        bio: (bio != null) ? bio : 'No bio set',
+                                        email: email,
+                                      ),
+                                    )),
                                   )
                                 : Container();
                           },
@@ -161,9 +266,12 @@ class SocialSearchDelegate extends SearchDelegate {
       height: double.infinity,
       color: backgroundColor,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Search for a person using his name or email!'),
-          Text('Search for an email for greater accuracy..'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Search for a person using his display name or email!'),
+          ),
         ],
       ),
     );
@@ -171,92 +279,52 @@ class SocialSearchDelegate extends SearchDelegate {
 }
 
 class Social extends StatelessWidget {
+  final initialIndex;
+  Social({this.initialIndex: 0});
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: auth.onAuthStateChanged,
-        builder: (context, userSnapshot) {
-          if (userSnapshot.hasData) {
-            return Container(
-              color: backgroundColor,
-              child: Column(
-                children: <Widget>[
-                  StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('users')
-                          .document(userSnapshot.data.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        return (snapshot.hasData)
-                            ? Row(
-                                children: <Widget>[
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CircleImage(
-                                        photoUrl: snapshot.data['photoUrl'],
-                                        size: 70,
-                                      )),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data['nickname'],
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          snapshot.data['bio'],
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Container();
-                      }),
-                  Divider(),
-                  FriendRequests(),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Meetups",
-                          style: TextStyle(
-                            fontSize: 24.0,
-                          ),
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            child: Text("No meetups yet. Schedule one?"),
-                            onTap: () {
-                              print("Scheduling meetup!");
-                            }, //TODO: Meetup scheduler
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        });
+    return DefaultTabController(
+      initialIndex: initialIndex,
+      length: 3,
+      child: Scaffold(
+        appBar: socialAppBar(context),
+        body: TabBarView(
+          children: <Widget>[
+            Meetups(),
+            InvitesPage(),
+            FriendRequests(),
+          ],
+        ),
+      ),
+    );
   }
 }
+
+class Meetups extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Meetups",
+          style: TextStyle(
+            fontSize: 24.0,
+          ),
+        ),
+        Center(
+          child: GestureDetector(
+            child: Text("No meetups yet. Schedule one?"),
+            onTap: () {
+              print("Scheduling meetup!");
+            }, //TODO: Meetup scheduler
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
 
 class FriendRequests extends StatelessWidget {
   @override
@@ -369,6 +437,7 @@ class FriendRequestCard extends StatelessWidget {
                         nickname: nickname,
                         uid: targetuid,
                         email: email,
+                        bio: 'Not implemented!!' //TODO: not implemented!
                       ),
                 ));
               }),
@@ -380,36 +449,49 @@ class FriendRequestCard extends StatelessWidget {
 
 class SocialCard extends StatelessWidget {
   final String photoUrl;
-  final String nickname;
-  final String email;
-  final String uid;
+  final String title;
+  final String subtitle;
+  final Function onTap;
+  final bool selected;
 
   SocialCard({
     @required this.photoUrl,
-    @required this.nickname,
-    @required this.email,
-    @required this.uid,
+    @required this.title,
+    @required this.subtitle,
+    @required this.onTap,
+    this.selected: false,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ProfilePage(
-                photoUrl: photoUrl,
-                nickname: nickname,
-                uid: uid,
-                email: email,
-              ),
-        ));
-      },
+      onTap: onTap,
       child: Row(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: CircleImage(
-              photoUrl: photoUrl,
+            child: Stack(
+              children: <Widget>[
+                CircleImage(
+                  photoUrl: photoUrl,
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: (selected == true)
+                      ? Container(
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        shape: BoxShape.circle,
+                      ),
+                      margin: EdgeInsets.all(1.0),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.brown,
+                      ))
+                      : Container(),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -420,7 +502,7 @@ class SocialCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(0.5),
                   child: Text(
-                    nickname,
+                    title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -431,7 +513,7 @@ class SocialCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(0.5),
                   child: Text(
-                    email,
+                    subtitle,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: Colors.grey[700],
@@ -477,74 +559,56 @@ class Friend {
 }
 
 void showFriendList(BuildContext context) {
-  showModalBottomSheet(context: context, builder: (context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.yellow[50],
-        borderRadius: BorderRadius.only(
-          topRight: const Radius.circular(10.0),
-          topLeft: const Radius.circular(10.0),
-        ),
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: 20.0,
-            child: Center(
-              child: Container(
-                width: 40.0,
-                height: 6.0,
-                decoration: BoxDecoration(
-                  color: Colors.grey[600],
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(3.0)
+  showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.yellow[50],
+            borderRadius: BorderRadius.only(
+              topRight: const Radius.circular(10.0),
+              topLeft: const Radius.circular(10.0),
+            ),
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 20.0,
+                child: Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 6.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[600],
+                      borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Container(
-              color: Colors.brown,
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Container(
-                  color: Colors.white,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.search, color: Colors.brown, size: 32,),
-                      ),
-                    ],
-                  ),
-                ),
+              Expanded(
+                child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection('users')
+                        .document(user.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FriendGridList(
+                          snapshot: snapshot,
+                        );
+                      } else
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                    }),
               ),
-            ),
+            ],
           ),
-          Expanded(
-            child: StreamBuilder(
-                stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return FriendGridList(snapshot: snapshot,);
-                  } else return Center(
-                  child: CircularProgressIndicator(),
-                  );
-                }
-            ),
-          ),
-        ],
-      ),
-    );
-  });
+        );
+      });
 }
 
 class FriendGridList extends StatefulWidget {
-
   final AsyncSnapshot snapshot;
 
   const FriendGridList({Key key, @required this.snapshot}) : super(key: key);
@@ -554,16 +618,19 @@ class FriendGridList extends StatefulWidget {
 }
 
 class _FriendGridListState extends State<FriendGridList> {
-
   String friendId;
   List<Friend> friends = [];
 
   @override
   void initState() {
     super.initState();
-    for (int i=0; i<widget.snapshot.data['friends'].length; i++) {
+    for (int i = 0; i < widget.snapshot.data['friends'].length; i++) {
       friendId = widget.snapshot.data['friends'][i];
-      Firestore.instance.collection('users').document(friendId).get().then((document) {
+      Firestore.instance
+          .collection('users')
+          .document(friendId)
+          .get()
+          .then((document) {
         String nickname = document.data['nickname'];
         String photoUrl = document.data['photoUrl'];
         Friend friend = new Friend(nickname: nickname, photoUrl: photoUrl);
@@ -589,16 +656,19 @@ class _FriendGridListState extends State<FriendGridList> {
           itemBuilder: (context, n) {
             return Material(
               child: InkWell(
-                onTap: () => print('Friend ${friends[n].nickname} tapped!'), //TODO: Add friends to meetup
+                onTap: () => print(
+                    'Friend ${friends[n].nickname} tapped!'), //TODO: Add friends to meetup
                 child: FriendCard(
                   nickname: friends[n].nickname,
                   photoUrl: friends[n].photoUrl,
                 ),
               ),
             );
-          }
+          });
+    } else
+      return Center(
+        child: CircularProgressIndicator(),
       );
-    } else return Center(child: CircularProgressIndicator(),);
   }
 }
 

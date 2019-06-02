@@ -1,7 +1,7 @@
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:flutter/material.dart';
-import 'timetable.dart';
 import 'package:intl/intl.dart';
+import 'package:pudding_flutter/calendar/timetable.dart';
 
 void handleNewDate(date, trial, taps) {
 
