@@ -5,7 +5,7 @@ import 'package:unicorndial/unicorndial.dart';
 import 'package:pudding_flutter/social/social.dart';
 import 'package:pudding_flutter/goals/goals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/auth/auth.dart';
 import 'package:pudding_flutter/main.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:pudding_flutter/themecolors.dart';

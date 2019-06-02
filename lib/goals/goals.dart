@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/auth/auth.dart';
 import 'package:pudding_flutter/goals/goalcreationpage.dart';
 import 'package:pudding_flutter/goals/goalpage.dart';
 import 'package:flushbar/flushbar.dart';

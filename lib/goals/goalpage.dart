@@ -5,7 +5,7 @@ import 'package:pudding_flutter/goals/goals.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/auth/auth.dart';
 import 'package:pudding_flutter/goals/goalstatpage.dart';
 
 /// This page shows a focus timer where the user can set a timer to focus on their work.

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'themecolors.dart';
-import 'auth.dart';
-import 'signinpage.dart';
+import 'package:pudding_flutter/auth/auth.dart';
+import 'package:pudding_flutter/auth/signinpage.dart';
 import 'package:pudding_flutter/calendar/pudding_calendar.dart';
 import 'package:pudding_flutter/social/social.dart';
 import 'package:pudding_flutter/goals/goals.dart';
-import 'dashboard.dart';
+import 'package:pudding_flutter/dashboard/dashboard.dart';
 import 'package:flutter/services.dart';
 
 

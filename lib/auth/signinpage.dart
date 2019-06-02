@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'themecolors.dart';
-import 'main.dart';
-import 'auth.dart';
+import 'package:pudding_flutter/themecolors.dart';
+import 'package:pudding_flutter/main.dart';
+import 'package:pudding_flutter/auth/auth.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';

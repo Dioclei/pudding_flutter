@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pudding_flutter/auth.dart';
+import 'package:pudding_flutter/auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pudding_flutter/goals/dateparser.dart';
 
