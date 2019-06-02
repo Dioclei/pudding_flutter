@@ -14,17 +14,15 @@ class EventCreator extends StatelessWidget {
               /*Event Creator Placeholder*/
               TextField(
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Event name'
-                ),
+                    border: InputBorder.none, hintText: 'Event name'),
               ),
               /*Start Date and Time placeholder*/
               Row(
-                mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               ),
               /*End Date and Time placeholder*/
               Row(
-                mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               ),
             ],
           ),
