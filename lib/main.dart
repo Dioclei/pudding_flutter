@@ -20,8 +20,6 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: backgroundColor));
 }
 
-
-
 class MyApp extends StatelessWidget {
 
   @override
