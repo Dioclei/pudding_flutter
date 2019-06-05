@@ -71,7 +71,7 @@ String getMonthDay (DateTime date) {
   return '${months[date.month - 1]} ${date.day}';
 }
 
-DateTime parseDate(DateTime date) {
+DateTime getDate(DateTime date) {
   /// Returns a DateTime with time as 00:00:00
   return DateTime(date.year, date.month, date.day);
 }
