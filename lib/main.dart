@@ -65,7 +65,7 @@ class MyHomePageState extends State<MyHomePage> {
     /// App Bars
     final _appBarOptions = [
       dashboardAppBar(context),
-      calendarAppBar(context),
+      null,
       goalsAppBar(context),
       null,
     ];
