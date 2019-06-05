@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pudding_flutter/goals/barchart.dart';
 import 'package:pudding_flutter/auth/auth.dart';
-import 'package:pudding_flutter/goals/dateparser.dart';
+import 'package:pudding_flutter/dateparser.dart';
 import 'package:pudding_flutter/themecolors.dart';
 
 class GoalStatPage extends StatelessWidget {
