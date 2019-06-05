@@ -53,6 +53,7 @@ int weekNumber(DateTime date) {
 }
 
 String getMonthDay (DateTime date) {
+  /// Returns a string "MMM DD"
   List<String> months = [
     'Jan',
     'Feb',
@@ -68,4 +69,9 @@ String getMonthDay (DateTime date) {
     'Dec',
   ];
   return '${months[date.month - 1]} ${date.day}';
+}
+
+DateTime parseDate(DateTime date) {
+  /// Returns a DateTime with time as 00:00:00
+  return DateTime(date.year, date.month, date.day);
 }
