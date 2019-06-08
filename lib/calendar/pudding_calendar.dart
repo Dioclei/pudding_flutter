@@ -58,7 +58,13 @@ class _PudCalendarState extends State<PudCalendar> {
         children: <Widget>[
           Container( /// Fake App Bar Extension
             width: queryData.size.width,
-            color: Colors.brown,
+            decoration: BoxDecoration(
+              color: Colors.brown,
+              boxShadow: [BoxShadow(
+                color: Colors.brown,
+                blurRadius: 5.0,
+              )]
+            ),
             child: NewCalendar(),
           ),
           Expanded(

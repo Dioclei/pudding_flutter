@@ -175,56 +175,14 @@ class Timetable extends StatelessWidget {
     //String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(today);
     String formattedDate = DateFormat('dd-MM-yyyy').format(tooday);
     return Container(
-      child: ListView(
-        children: [
-          _card(context, '00:00-01:00   '),
-          Divider(),
-          _card(context, '01:00-02:00   '),
-          Divider(),
-          _card(context, '02:00-03:00   '),
-          Divider(),
-          _card(context, '03:00-04:00   '),
-          Divider(),
-          _card(context, '04:00-05:00   '),
-          Divider(),
-          _card(context, '05:00-06:00   '),
-          Divider(),
-          _card(context, '06:00-07:00   '),
-          Divider(),
-          _card(context, '07:00-08:00   '),
-          Divider(),
-          _card(context, '08:00-09:00   '),
-          Divider(),
-          _card(context, '09:00-10:00   '),
-          Divider(),
-          _card(context, '10:00-11:00   '),
-          Divider(),
-          _card(context, '11:00-12:00   '),
-          Divider(),
-          _card(context, '12:00-13:00   '),
-          Divider(),
-          _card(context, '13:00-14:00   '),
-          Divider(),
-          _card(context, '14:00-15:00   '),
-          Divider(),
-          _card(context, '15:00-16:00   '),
-          Divider(),
-          _card(context, '16:00-17:00   '),
-          Divider(),
-          _card(context, '17:00-18:00   '),
-          Divider(),
-          _card(context, '18:00-19:00   '),
-          Divider(),
-          _card(context, '19:00-20:00   '),
-          Divider(),
-          _card(context, '20:00-21:00   '),
-          Divider(),
-          _card(context, '21:00-22:00   '),
-          Divider(),
-          _card(context, '22:00-23:00   '),
-          Divider(),
-          _card(context, '23:00-00:00   '),
-        ],
+      child: ListView.separated(
+        itemCount: 24,
+        itemBuilder: (context, i) {
+          return _card(context, '0$i:00-0${i+1}:00   ');
+        },
+        separatorBuilder: (context, i) {
+          return Divider();
+        },
       ),
     );
   }
