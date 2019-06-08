@@ -178,7 +178,7 @@ class Timetable extends StatelessWidget {
       child: ListView.separated(
         itemCount: 24,
         itemBuilder: (context, i) {
-          return _card(context, '0$i:00-0${i+1}:00   ');
+          return _card(context, '${i.toString().padLeft(2, '0')}:00-${(i+1).toString().padLeft(2, '0')}:00   ');
         },
         separatorBuilder: (context, i) {
           return Divider();
