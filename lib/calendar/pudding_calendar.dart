@@ -29,7 +29,7 @@ class _PudCalendarState extends State<PudCalendar> {
   void initState() {
     today = DateTime.now();
     selectedDate = getDate(today);
-    _pageController = PageController(initialPage: 5000);
+    _pageController = PageController(initialPage: 999999);
     animating = false;
     super.initState();
   }
@@ -47,7 +47,7 @@ class _PudCalendarState extends State<PudCalendar> {
               icon: Icon(Icons.event_note),
               onPressed: () {
                 setState(() {
-                  _pageController.animateToPage(5000, duration: Duration(seconds: 1), curve: Curves.ease).whenComplete(() {
+                  _pageController.animateToPage(999999, duration: Duration(seconds: 1), curve: Curves.ease).whenComplete(() {
                     selectedDate = today;
                   });
                 });
@@ -67,7 +67,7 @@ class _PudCalendarState extends State<PudCalendar> {
                   setState(() {
                     int offset =
                         getDate(date).difference(getDate(today)).inDays;
-                    _pageController.animateToPage(5000 + offset,
+                    _pageController.animateToPage(999999 + offset,
                         duration: Duration(seconds: 1), curve: Curves.ease).whenComplete(() {
                           selectedDate = getDate(date);
                     });
@@ -80,7 +80,7 @@ class _PudCalendarState extends State<PudCalendar> {
             child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (i) {
-                  int offset = i - 5000;
+                  int offset = i - 999999;
                   setState(() {
                     selectedDate = today.add(Duration(days: offset));
                   });
@@ -91,7 +91,7 @@ class _PudCalendarState extends State<PudCalendar> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            getMonthDay(today.add(Duration(days: (i - 5000))))),
+                            getMonthDay(today.add(Duration(days: (i - 999999))))),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
