@@ -52,7 +52,7 @@ class _ParentWidgetState extends State<ParentWidget> {
         ontaps: _handleTaps,
         taps: _taps,
         tooday: widget.today,
-        active: _active,
+        selected: _active,
         onChanged: _handleTapboxChanged,
       ),
     );
@@ -60,13 +60,13 @@ class _ParentWidgetState extends State<ParentWidget> {
 }
 
 class Timetable extends StatelessWidget {
-  final bool active;
+  final bool selected;
   final ValueChanged<bool> onChanged;
   final bool taps;
   final ValueChanged<bool> ontaps;
   Timetable(
       {Key key,
-        this.active: false,
+        this.selected: false,
         this.taps: false,
         @required this.tooday,
         this.onChanged,
@@ -76,7 +76,7 @@ class Timetable extends StatelessWidget {
   /* The _card function is to generate individual card widgets for the list
   * view without overcrowding the ListView with repetitive code*/
   void _handleTap() {
-    onChanged(!active);
+    onChanged(!selected);
   }
 
   void _handleSecondTap() {
@@ -87,7 +87,6 @@ class Timetable extends StatelessWidget {
     return new Container(
       padding: EdgeInsets.all(20),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         // mainAxisAlignment:MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
@@ -115,46 +114,17 @@ class Timetable extends StatelessWidget {
                     _handleSecondTap();
                   }
                 },
-                onDoubleTap: () {},
-
-                //textColor: Colors.white,
-                //padding: const EdgeInsets.all(0.0),
-
-                /*
-                  TODO: Forcefully merged this part. Not sure if still needed.
-                  RaisedButton(
-                  onPressed: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventCreator())
-                    );
-                  },
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(0.0),
-                 */
-
+                onDoubleTap: () {
+                  print('double tapped!');
+                },
                 child: Container(
-                  //width: 200,
-
                   decoration: BoxDecoration(
-                      color: active ? Colors.blue : Colors.grey[400]
-                    //if u want to gradient it I guess...
-                    //  gradient: LinearGradient(
-
-                    // colors: active ? <Color>[
-                    // Color(0xFF0D47A1),
-                    //Color(0xFF1976D2),
-                    //Color(0xFF42A5F5),
-                    //] : <Color>[
-                    //      Colors.grey[600],
-                    //      Color(0xFFBDBDBD),
-                    //    ],
-                    // ),
+                      color: selected ? Colors.blue : Colors.grey[400]
                   ),
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    active ? '+Add Event' : '',
-                    style: active
+                    selected ? '+Add Event' : '',
+                    style: selected
                         ? TextStyle(color: Colors.white)
                         : TextStyle(color: Colors.grey[400]),
                   ),

@@ -4,6 +4,9 @@ class EventCreator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('New Event'),
+      ),
       body: Center(
         child: Container(
           margin: const EdgeInsets.all(30.0),

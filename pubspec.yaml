@@ -36,6 +36,7 @@ dependencies:
   intl: 0.15.7
   flushbar: ^1.4.0
   unicorndial: ^1.1.5
+  table_calendar: ^1.2.2
 
 dev_dependencies:
   flutter_test:

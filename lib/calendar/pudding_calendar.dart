@@ -20,15 +20,17 @@ class PudCalendar extends StatefulWidget {
 
 class _PudCalendarState extends State<PudCalendar> {
   DateTime today;
-  DateTime currentDate;
+  DateTime selectedDate;
+  bool animating;
   PageController _pageController;
   MediaQueryData queryData;
 
   @override
   void initState() {
     today = DateTime.now();
-    currentDate = getDate(today);
+    selectedDate = getDate(today);
     _pageController = PageController(initialPage: 5000);
+    animating = false;
     super.initState();
   }
 
@@ -38,34 +40,41 @@ class _PudCalendarState extends State<PudCalendar> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(getMonthDay(currentDate)),
         elevation: 0,
+        title: Text('Calendar'),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.event_note),
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: NewCalendar(),
-                      );
-                    });
+                setState(() {
+                  _pageController.animateToPage(5000, duration: Duration(seconds: 1), curve: Curves.ease).whenComplete(() {
+                    selectedDate = today;
+                  });
+                });
               })
         ],
       ),
       body: Column(
         children: <Widget>[
-          Container( /// Fake App Bar Extension
-            width: queryData.size.width,
-            decoration: BoxDecoration(
-              color: Colors.brown,
-              boxShadow: [BoxShadow(
-                color: Colors.brown,
-                blurRadius: 5.0,
-              )]
+          Material(
+            /// Fake App Bar Extension
+            elevation: 4,
+            color: Colors.brown,
+            child: NewCalendar(
+              selectedDate: selectedDate,
+              onDateChanged: (date) {
+                if (date != selectedDate) {
+                  setState(() {
+                    int offset =
+                        getDate(date).difference(getDate(today)).inDays;
+                    _pageController.animateToPage(5000 + offset,
+                        duration: Duration(seconds: 1), curve: Curves.ease).whenComplete(() {
+                          selectedDate = getDate(date);
+                    });
+                  });
+                }
+              },
             ),
-            child: NewCalendar(),
           ),
           Expanded(
             child: PageView.builder(
@@ -73,20 +82,27 @@ class _PudCalendarState extends State<PudCalendar> {
                 onPageChanged: (i) {
                   int offset = i - 5000;
                   setState(() {
-                    if (offset == 0) {
-                      currentDate = today;
-                    } else if (offset > 0) {
-                      currentDate =
-                          getDate(today.add(Duration(days: offset.abs())));
-                    } else {
-                      currentDate =
-                          getDate(today.subtract(Duration(days: offset.abs())));
-                    }
+                    selectedDate = today.add(Duration(days: offset));
                   });
                 },
                 itemBuilder: (context, i) {
-                  return Timetable(
-                    tooday: currentDate,
+                  return Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            getMonthDay(today.add(Duration(days: (i - 5000))))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Index: $i'),
+                      ),
+                      Expanded(
+                        child: Timetable(
+                          tooday: selectedDate,
+                        ),
+                      ),
+                    ],
                   );
                 }),
           ),
