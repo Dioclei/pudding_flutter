@@ -1,13 +1,10 @@
-import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:pudding_flutter/calendar/timetable.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class NewCalendar extends StatelessWidget {
+class Calendar extends StatelessWidget {
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDateChanged;
-  NewCalendar({selectedDate, @required this.onDateChanged})
+  Calendar({selectedDate, @required this.onDateChanged})
     : selectedDate = selectedDate ?? DateTime.now();
   @override
   Widget build(BuildContext context) {

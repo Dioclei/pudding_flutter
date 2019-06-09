@@ -97,13 +97,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.1"
-  flutter_calendar:
-    dependency: "direct main"
-    description:
-      name: flutter_calendar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.8"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -247,13 +240,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.4"
-  tuple:
-    dependency: transitive
-    description:
-      name: tuple
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   typed_data:
     dependency: transitive
     description:

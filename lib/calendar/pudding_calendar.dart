@@ -20,7 +20,8 @@ class PudCalendar extends StatefulWidget {
 
 class _PudCalendarState extends State<PudCalendar> {
   DateTime today;
-  DateTime selectedDate;
+  DateTime selectedDate; /// refers to the final destination date that the user selects
+  DateTime currentPageDate; /// refers to the current date displayed on the PageView
   bool animating;
   PageController _pageController;
   MediaQueryData queryData;
@@ -28,7 +29,7 @@ class _PudCalendarState extends State<PudCalendar> {
   @override
   void initState() {
     today = DateTime.now();
-    selectedDate = getDate(today);
+    currentPageDate = selectedDate = getDate(today);
     _pageController = PageController(initialPage: 999999);
     animating = false;
     super.initState();
@@ -60,16 +61,20 @@ class _PudCalendarState extends State<PudCalendar> {
             /// Fake App Bar Extension
             elevation: 4,
             color: Colors.brown,
-            child: NewCalendar(
+            child: Calendar(
               selectedDate: selectedDate,
               onDateChanged: (date) {
                 if (date != selectedDate) {
                   setState(() {
                     int offset =
                         getDate(date).difference(getDate(today)).inDays;
+                    animating = true;
                     _pageController.animateToPage(999999 + offset,
                         duration: Duration(seconds: 1), curve: Curves.ease).whenComplete(() {
-                          selectedDate = getDate(date);
+                          animating = false;
+                          setState(() {
+                            selectedDate = currentPageDate;
+                          });
                     });
                   });
                 }
@@ -82,7 +87,9 @@ class _PudCalendarState extends State<PudCalendar> {
                 onPageChanged: (i) {
                   int offset = i - 999999;
                   setState(() {
-                    selectedDate = today.add(Duration(days: offset));
+                    currentPageDate = today.add(Duration(days: offset));
+                    if (animating == false)
+                      selectedDate = currentPageDate;
                   });
                 },
                 itemBuilder: (context, i) {
@@ -91,7 +98,7 @@ class _PudCalendarState extends State<PudCalendar> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            getMonthDay(today.add(Duration(days: (i - 999999))))),
+                            getMonthDay(currentPageDate)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -99,7 +106,7 @@ class _PudCalendarState extends State<PudCalendar> {
                       ),
                       Expanded(
                         child: Timetable(
-                          tooday: selectedDate,
+                          tooday: currentPageDate,
                         ),
                       ),
                     ],
