@@ -9,7 +9,6 @@ class EventCreator extends StatelessWidget {
       ),
       body: Center(
         child: Container(
-          margin: const EdgeInsets.all(30.0),
           padding: const EdgeInsets.all(20.0),
           color: Colors.white,
           child: ListView(

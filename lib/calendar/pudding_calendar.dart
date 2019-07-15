@@ -3,6 +3,20 @@ import 'calendar_carousel.dart';
 import 'package:pudding_flutter/dateparser.dart';
 import 'package:pudding_flutter/calendar/timetable.dart';
 
+/// Data Structure for Events
+/// collection('Events').document(user.uid)
+///   .collection(Specific Date)
+///     .document(event_id)
+///       eventTitle: String
+///       startTime: DateTime.toISO8601String
+///       endTime: DateTime.toISO8601String
+///       allDay: Boolean
+///       colorValue: Color.value
+///       repeating: Boolean
+///       repeatingPeriod: Duration.toString
+///       repeatingDay: DateTime.weekday (int: 1..7)
+
+
 FloatingActionButton calendarFloatingActionButton(BuildContext context) {
   return FloatingActionButton(
     child: Icon(Icons.event),
@@ -93,23 +107,8 @@ class _PudCalendarState extends State<PudCalendar> {
                   });
                 },
                 itemBuilder: (context, i) {
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            getMonthDay(currentPageDate)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Index: $i'),
-                      ),
-                      Expanded(
-                        child: Timetable(
-                          tooday: currentPageDate,
-                        ),
-                      ),
-                    ],
+                  return Timetable(
+                    currentDate: currentPageDate,
                   );
                 }),
           ),

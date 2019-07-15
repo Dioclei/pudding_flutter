@@ -2,160 +2,293 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'event_creator.dart';
 
-AppBar timetableAppBar(BuildContext context) {
-  return AppBar(
-    title: Text('put selected date here '),
-  );
+/// Parameters for adjusting sizes & color of the timetable layout.
+const hourHeight = 60.0;
+const timesWidth = 70.0;
+const dividerOffset = 5.0;
+final Color dividerColor = Colors.brown[300].withOpacity(0.2);
+final Color addEventContainerColor = Colors.blue;
+
+class Event {
+  final DateTime startTime;
+  final DateTime endTime;
+  final Color eventColor;
+  final String title;
+  Event({@required this.startTime, @required this.endTime, @required this.eventColor, @required this.title});
 }
 
-class VerticalDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      height: 30.0,
-      width: 1.0,
-      color: Colors.black38,
-      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-    );
-  }
-}
-
-class ParentWidget extends StatefulWidget {
-  ParentWidget({
-    Key key,
-    @required this.today,
-  }) : super(key: key);
-  DateTime today;
-  @override
-  _ParentWidgetState createState() => _ParentWidgetState();
-}
-
-class _ParentWidgetState extends State<ParentWidget> {
-  bool _active = false;
-  bool _taps = false;
-  void _handleTapboxChanged(bool newValue) {
-    setState(() {
-      _active = newValue;
-    });
-  }
-
-  void _handleTaps(bool newValue) {
-    setState(() {
-      _taps = newValue;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Timetable(
-        ontaps: _handleTaps,
-        taps: _taps,
-        tooday: widget.today,
-        selected: _active,
-        onChanged: _handleTapboxChanged,
-      ),
-    );
-  }
-}
-
-class Timetable extends StatelessWidget {
-  final bool selected;
-  final ValueChanged<bool> onChanged;
-  final bool taps;
-  final ValueChanged<bool> ontaps;
+class Timetable extends StatefulWidget {
+  final DateTime currentDate;
   Timetable(
-      {Key key,
-        this.selected: false,
-        this.taps: false,
-        @required this.tooday,
-        this.onChanged,
-        this.ontaps})
+      {Key key, @required this.currentDate,})
       : super(key: key);
-  DateTime tooday;
-  /* The _card function is to generate individual card widgets for the list
-  * view without overcrowding the ListView with repetitive code*/
-  void _handleTap() {
-    onChanged(!selected);
-  }
+  @override
+  _TimetableState createState() => _TimetableState();
+}
 
-  void _handleSecondTap() {
-    ontaps(!taps);
-  }
+class _TimetableState extends State<Timetable> {
+  int selectedInt;
+  List<Widget> times = [];
+  List<Widget> timetableBoxes = [];
+  List<Widget> timetableBoxDividers = [];
+  List<Event> events = [];
+  List<Widget> eventContainers = [];
+  List<Widget> selector = []; // single child list
+  List<Widget> verticalDivider = []; // single child list
+  List<Widget> children = [];
+  List<Widget> tappedChildren = [];
 
-  Widget _card(context, label) {
-    return new Container(
-      padding: EdgeInsets.all(20),
-      child: Row(
-        // mainAxisAlignment:MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            label,
-            style: TextStyle(fontSize: 16),
-          ),
-          // Expanded(child: Text(label), ),
-          //Expanded(child:Container(
-          //height: 30,
-          //width: 2,
-          //color: Colors.grey[400],
-          //),),
-          Expanded(
+  @override
+  void initState() {
+    selectedInt = 0;
+    times = List.generate(23, (i) {
+      return LayoutId(
+        id: "Time${i+1}",
+        child: Center(child: Text('${(i+1).toString().padLeft(2, '0')}:00')),
+      );
+    });
+    timetableBoxes = List.generate(24, (j) {
+      return LayoutId(
+        id: 'Box${j+1}',
+        child: InkWell(
+          onTap: () => setState(() {
+            selectedInt = j+1;
+          })
+        )
+      );
+    });
+    timetableBoxDividers = List.generate(23, (k) {
+      return LayoutId(
+        id: 'Divider${k+1}',
+        child: Container(
+          height: 1.0,
+          color: dividerColor,
+        )
+      );
+    });
+    verticalDivider = [
+      LayoutId(
+          id: 'VerticalDivider',
+          child: Container(
+            width: 1.0,
+            color: dividerColor,
+          )
+      ),
+    ];
+    selector = [
+      LayoutId(
+        id: 'Selector',
+        child: Container(
+            decoration: BoxDecoration(
+                color: addEventContainerColor,
+                borderRadius: BorderRadius.circular(10.0)
+            ),
             child: Material(
-              color: Colors.grey[400],
               child: InkWell(
-                onTap: () {
-                  if (taps == true) {
-                    _handleTap();
-                    //_handleSecondTap(); somewhere somehow _handleSecondTap() needs to be false after u tap
-                    print("HIYA");
-                    //replace this with push to the add event page
-                  } else {
-                    _handleTap();
-                    _handleSecondTap();
-                  }
-                },
-                onDoubleTap: () {
-                  print('double tapped!');
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: selected ? Colors.blue : Colors.grey[400]
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    selected ? '+Add Event' : '',
-                    style: selected
-                        ? TextStyle(color: Colors.white)
-                        : TextStyle(color: Colors.grey[400]),
-                  ),
-                  height: 30,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EventCreator())),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('+Add Event', style: TextStyle(color: Colors.white)),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+            )
+        ),
+      )
+    ];
+    /// TODO: Retrieve Events based on widget.currentDate
+    events = [
+      Event(title: 'Slack off', startTime: DateTime(2019, 7, 15, 5, 00), endTime: DateTime(2019, 7, 15, 6, 54), eventColor: Colors.pink,),
+      Event(title: 'Do Homework', startTime: DateTime(2019, 7, 15, 13, 53), endTime: DateTime(2019, 7, 15, 14, 45), eventColor: Colors.red,),
+      Event(title: 'Complain with Angelo', startTime: DateTime(2019, 7, 15, 18, 15), endTime: DateTime(2019, 7, 15, 22, 34), eventColor: Colors.lightBlue[400],),
+      Event(title: 'Sleeping with Tom', startTime: DateTime(2019, 7, 15, 15, 00), endTime: DateTime(2019, 7, 15, 17, 00), eventColor: Colors.purple,)
+    ];
+    eventContainers = List.generate(events.length, (e) {
+      return LayoutId(id: 'Event${e+1}', child: EventContainer(event: events[e],));
+    });
+
+
+    /// Note: order of children widgets determines painting order.
+    tappedChildren = times + timetableBoxes + timetableBoxDividers + verticalDivider + selector + eventContainers;
+    children = times + timetableBoxes + timetableBoxDividers + verticalDivider + eventContainers;
+
+
+    // TODO: grab data from Firebase/TableCalendar using currentDate to display events.
+    super.initState();
   }
 
-  /* Building a new page for timetable: */
   @override
   Widget build(BuildContext context) {
     //this is the format for formatting date and getting 2015-12-01 - currenthour : currentminute
     //String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(today);
-    String formattedDate = DateFormat('dd-MM-yyyy').format(tooday);
-    return Container(
-      child: ListView.separated(
-        itemCount: 24,
-        itemBuilder: (context, i) {
-          return _card(context, '${i.toString().padLeft(2, '0')}:00-${(i+1).toString().padLeft(2, '0')}:00   ');
-        },
-        separatorBuilder: (context, i) {
-          return Divider();
-        },
+    String formattedDate = DateFormat('dd-MM-yyyy').format(widget.currentDate);
+
+    return SingleChildScrollView(
+      child: Container(
+        height: 24 * hourHeight,
+        child: CustomMultiChildLayout(
+          delegate: TimetableLayoutDelegate(events: events, selectedInt: selectedInt, currentDate: widget.currentDate),
+          children: selectedInt > 0 ? tappedChildren : children,
+        ),
       ),
     );
   }
 }
+
+class TimetableLayoutDelegate extends MultiChildLayoutDelegate {
+  final List<Event> events;
+  final int selectedInt;
+  final DateTime currentDate;
+  TimetableLayoutDelegate({@required this.events, @required this.selectedInt, @required this.currentDate});
+
+  @override
+  void performLayout(Size size) {
+    /// Layout Times
+    if (hasChild('Time1')) {
+      for (int i = 0; i < 23; i++) {
+        layoutChild(
+            'Time${i + 1}', BoxConstraints.tight(Size(timesWidth, hourHeight)));
+        positionChild(
+            'Time${i + 1}', Offset(0.0, (0.5 * hourHeight + i * hourHeight)));
+      }
+    }
+    /// Layout Timetable Boxes
+    if (hasChild('Box1')) {
+      for (int j = 0; j < 24; j++) {
+        layoutChild('Box${j + 1}', BoxConstraints.tight(
+            Size(size.width - timesWidth - dividerOffset, hourHeight)));
+        positionChild(
+            'Box${j + 1}', Offset(timesWidth + dividerOffset, j * hourHeight));
+      }
+    }
+    /// Layout Timetable Box Dividers
+    if (hasChild('Divider1')) {
+      for (int k = 0; k < 23; k++) {
+        layoutChild('Divider${k + 1}',
+            BoxConstraints.loose(Size(size.width - timesWidth, size.height)));
+        positionChild(
+            'Divider${k + 1}', Offset(timesWidth, (k + 1) * hourHeight));
+      }
+    }
+    /// Layout Vertical Divider
+    if (hasChild('VerticalDivider')) {
+      layoutChild('VerticalDivider', BoxConstraints.loose(size));
+      positionChild('VerticalDivider', Offset(timesWidth + dividerOffset, 0.0));
+    }
+    /// Layout Add Event Selector
+    if (selectedInt > 0) {
+      if (hasChild('Selector')) {
+        layoutChild('Selector', BoxConstraints.tight(
+            Size(size.width - timesWidth - dividerOffset, hourHeight)));
+        positionChild('Selector',
+            Offset(timesWidth + dividerOffset, (selectedInt - 1) * hourHeight));
+      }
+    }
+    /// Layout Events
+    if (events.length > 0) {
+      for(int e = 0; e < events.length; e++) {
+        Duration eventDuration = events[e].endTime.difference(events[e].startTime);
+        double height;
+        double offsetHeight;
+        DateTime zeroTime = DateTime(events[e].startTime.year, events[e].startTime.month, events[e].startTime.day);
+        if (eventDuration.inMinutes < 1440) {
+          height = size.height / 1440 * eventDuration.inMinutes.abs();
+          offsetHeight = size.height / 1440 * events[e].startTime.difference(zeroTime).inMinutes.abs();
+        }
+        layoutChild('Event${e+1}', BoxConstraints.tight(Size(size.width - timesWidth - dividerOffset, height)));
+        positionChild('Event${e+1}',
+          Offset(timesWidth + dividerOffset, offsetHeight)
+        );
+      }
+    }
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return super.toString();
+  }
+
+  @override
+  bool shouldRelayout(TimetableLayoutDelegate oldDelegate) {
+    return selectedInt != oldDelegate.selectedInt || events != oldDelegate.events;
+  }
+}
+
+class EventContainer extends StatelessWidget {
+  final Event event;
+  EventContainer({this.event});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: event.eventColor,
+        borderRadius: BorderRadius.circular(10.0)
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(event.title, style: TextStyle(color: Colors.white),),
+      ),
+    );
+  }
+}
+
+
+/*
+DOESNT WORK BTW
+AddEventCard(
+          selected: ('Box${j+1}' == selectedId),
+          onTap: () {
+            if ('Box${j+1}' == selectedId) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventCreator()));
+            } else {
+              setState(() {
+                selectedId = 'Box${j+1}';
+              });
+            }
+          },
+          onDoubleTap: () {
+            setState(() {
+              selectedId = 'Box${j+1}';
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventCreator()));
+            });
+          },
+        )
+
+ */
+
+/*
+ListView.separated(
+      itemCount: 24,
+      itemBuilder: (context, i) {
+        return AddEventCard(
+          selected: (i == selectedIndex),
+          onTap: () {
+            if (i == selectedIndex) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventCreator()));
+            } else {
+              setState(() {
+                selectedIndex = i;
+              });
+            }
+          },
+          onDoubleTap: () {
+            setState(() {
+              selectedIndex = i;
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventCreator()));
+            });
+          },
+        );
+      },
+      separatorBuilder: (context, i) {
+        return Divider(
+          height: 0.0,
+          color: Colors.brown[300],
+        );
+      },
+    );
+ */
+
+
+
 
 
